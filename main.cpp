@@ -155,5 +155,7 @@ int main()
     resultC = it.divide( 50, 25 );
     std::cout << "result of it.divide(): " << resultC << std::endl;
 
+    it.divide(1, 0);
+
     std::cout << "good to go!" << std::endl;
 }
