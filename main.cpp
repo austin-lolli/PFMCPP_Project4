@@ -117,15 +117,17 @@ int IntType::multiply( int lhs, int rhs )
     return lhs * rhs; 
 }
 
+#include <iostream>
 int IntType::divide( int lhs, int rhs )
 {
     if( rhs == 0 )
     {
+        std::cout << "Can't divide by 0! "  << std::endl;       
         return 0;
     }
     else
     {
-    return lhs / rhs;
+        return lhs / rhs;
     }
 }
 
