@@ -119,7 +119,14 @@ int IntType::multiply( int lhs, int rhs )
 
 int IntType::divide( int lhs, int rhs )
 {
+    if( rhs == 0 )
+    {
+        return 0;
+    }
+    else
+    {
     return lhs / rhs;
+    }
 }
 
 #include <iostream>
