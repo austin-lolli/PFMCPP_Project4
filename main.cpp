@@ -81,31 +81,35 @@ struct FloatType
         heapFloat = nullptr;
     }
 
-    float add( float lhs, float rhs );
-    float subtract( float lhs, float rhs );
-    float multiply( float lhs, float rhs );
-    float divide( float lhs, float rhs );
+    float& add( float operand );
+    float& subtract( float operand );
+    float& multiply( float operand );
+    float& divide( float roperandhs );
 };
 
 // float member functions 
-float FloatType::add( float lhs, float rhs )
+float& FloatType::add( float operand )
 {
-    return lhs + rhs;
+    *this->heapFloat += operand;
+    return *this->heapFloat;
 }
 
-float FloatType::subtract( float lhs, float rhs )
+float& FloatType::subtract( float operand )
 {
-    return lhs - rhs;
+    *this->heapFloat -= operand;
+    return *this->heapFloat;
 }
 
-float FloatType::multiply( float lhs, float rhs )
+float& FloatType::multiply( float operand )
 {
-    return lhs * rhs; 
+    *this->heapFloat *= operand;
+    return *this->heapFloat;
 }
 
-float FloatType::divide( float lhs, float rhs )
+float& FloatType::divide( float operand )
 {
-    return lhs / rhs;
+    *this->heapFloat /= operand;
+    return *this->heapFloat;
 }
 
 // double UDT
@@ -122,31 +126,35 @@ struct DoubleType
         heapDub = nullptr;
     }
     
-    double add( double lhs, double rhs );
-    double subtract( double lhs, double rhs );
-    double multiply( double lhs, double rhs );
-    double divide( double lhs, double rhs );
+    double& add( double operand );
+    double& subtract( double operand );
+    double& multiply( double operand );
+    double& divide( double operand );
 };
 
 // double member functions
-double DoubleType::add( double lhs, double rhs )
+double& DoubleType::add( double operand )
 {
-    return lhs + rhs;
+    *this->heapDub += operand;
+    return *this->heapDub;
 }
 
-double DoubleType::subtract( double lhs, double rhs )
+double& DoubleType::subtract( double operand )
 {
-    return lhs - rhs;
+    *this->heapDub -= operand;
+    return *this->heapDub;
 }
 
-double DoubleType::multiply( double lhs, double rhs )
+double& DoubleType::multiply( double operand )
 {
-    return lhs * rhs; 
+    *this->heapDub *= operand;
+    return *this->heapDub;
 }
 
-double DoubleType::divide( double lhs, double rhs )
+double& DoubleType::divide( double operand )
 {
-    return lhs / rhs;
+    *this->heapDub /= operand;
+    return *this->heapDub;
 }
 
 // int UDT
@@ -163,74 +171,78 @@ struct IntType
         heapInt = nullptr;
     }
 
-    int add( int lhs, int rhs );
-    int subtract( int lhs, int rhs );
-    int multiply( int lhs, int rhs );
-    int divide( int lhs, int rhs );
+    int& add( int operand );
+    int& subtract( int operand );
+    int& multiply( int operand );
+    int& divide( int operand );
 };
 
 // int member functions
-int IntType::add( int lhs, int rhs )
+int& IntType::add( int operand )
 {
-    return lhs + rhs;
+    *this->heapInt += operand;
+    return *this->heapInt;
 }
 
-int IntType::subtract( int lhs, int rhs )
+int& IntType::subtract( int operand )
 {
-    return lhs - rhs;
+    *this->heapInt -= operand;
+    return *this->heapInt;
 }
 
-int IntType::multiply( int lhs, int rhs )
+int& IntType::multiply( int operand )
 {
-    return lhs * rhs; 
+    *this->heapInt *= operand;
+    return *this->heapInt;
 }
 
 #include <iostream>
-int IntType::divide( int lhs, int rhs )
+int& IntType::divide( int operand )
 {
-    if( rhs == 0 )
+    if( operand == 0 )
     {
-        std::cout << "Can't divide by 0! "  << std::endl;       
-        return 0;
+        std::cout << "Can't divide by 0! Cancelling divide operation."  << std::endl;       
+        return *this->heapInt;
     }
     
-    return lhs / rhs;
+    *this->heapInt /= operand;
+    return *this->heapInt;
 }
 
 #include <iostream>
 int main()
 {
-    FloatType ft;
-    auto resultA = ft.add( 21.4f, 7.1f );
+    FloatType ft( 5.5f );
+    auto resultA = ft.add( 7.1f );
     std::cout << "result of ft.add(): " << resultA << std::endl;
-    resultA = ft.subtract( 21.4f, 7.1f );
+    resultA = ft.subtract( 10.6f );
     std::cout << "result of ft.subtract(): " << resultA << std::endl;
-    resultA = ft.multiply( 21.4f, 7.1f );
+    resultA = ft.multiply( 7.1f );
     std::cout << "result of ft.multiply(): " << resultA << std::endl;
-    resultA = ft.divide( 21.4f, 7.1f );
+    resultA = ft.divide( 7.1f );
     std::cout << "result of ft.divide(): " << resultA << std::endl;
 
-    DoubleType dt;
-    auto resultB = dt.add( 7.343, 3.278 );
+    DoubleType dt( 11.1 ) ;
+    auto resultB = dt.add( 3.278 );
     std::cout << "result of dt.add(): " << resultB << std::endl;
-    resultB = dt.subtract( 7.343, 3.278 );
+    resultB = dt.subtract( 7.343 );
     std::cout << "result of dt.subtract(): " << resultB << std::endl;
-    resultB = dt.multiply( 7.343, 3.278 );
+    resultB = dt.multiply( 4.348 );
     std::cout << "result of dt.multiply(): " << resultB << std::endl;
-    resultB = dt.divide( 7.343, 3.278 );
+    resultB = dt.divide( 2.939 );
     std::cout << "result of dt.divide(): " << resultB << std::endl;
 
-    IntType it;
-    auto resultC = it.add( 50, 25 );
+    IntType it ( 34 );
+    auto resultC = it.add( 25 );
     std::cout << "result of it.add(): " << resultC << std::endl;
-    resultC = it.subtract( 50, 25 );
+    resultC = it.subtract( 50 );
     std::cout << "result of it.subtract(): " << resultC << std::endl;
-    resultC = it.multiply( 50, 25 );
+    resultC = it.multiply( 55 );
     std::cout << "result of it.multiply(): " << resultC << std::endl;
-    resultC = it.divide( 50, 25 );
+    resultC = it.divide( 55 );
     std::cout << "result of it.divide(): " << resultC << std::endl;
 
-    it.divide(1, 0);
+    it.divide( 0 );
 
     std::cout << "good to go!" << std::endl;
 }
