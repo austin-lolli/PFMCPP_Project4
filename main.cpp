@@ -13,14 +13,19 @@ New/This/Pointers/References conclusion
      on the lines below it, write a struct named 'HeapA' that correctly shows how to own an instance of 'A' 
          on the heap without leaking, without using smart pointers. 
  */
+struct A { };
 
+struct HeapA
+{
+    A *aOfA = nullptr;
 
-
-
-
-
-
-
+    HeapA() : aOfA(new A) {}
+    ~HeapA()
+    {
+        delete aOfA;
+        aOfA = nullptr;
+    }
+};
 
 
 
@@ -65,6 +70,17 @@ New/This/Pointers/References conclusion
 // float UDT 
 struct FloatType
 {
+    float* heapFloat = nullptr; 
+
+    FloatType() : heapFloat( new float ) {}
+    FloatType( float f ) : heapFloat( new float(f) ) {}
+
+    ~FloatType()
+    {
+        delete heapFloat;
+        heapFloat = nullptr;
+    }
+
     float add( float lhs, float rhs );
     float subtract( float lhs, float rhs );
     float multiply( float lhs, float rhs );
@@ -95,6 +111,17 @@ float FloatType::divide( float lhs, float rhs )
 // double UDT
 struct DoubleType
 {
+    double* heapDub = nullptr;
+
+    DoubleType() : heapDub( new double ) {}
+    DoubleType( double d ) : heapDub( new double(d) ) {}
+
+    ~DoubleType()
+    {
+        delete heapDub;
+        heapDub = nullptr;
+    }
+    
     double add( double lhs, double rhs );
     double subtract( double lhs, double rhs );
     double multiply( double lhs, double rhs );
@@ -125,6 +152,17 @@ double DoubleType::divide( double lhs, double rhs )
 // int UDT
 struct IntType
 {
+    int* heapInt = nullptr;
+
+    IntType() : heapInt( new int ) {}
+    IntType( int i ) : heapInt( new int(i) ) {}
+
+    ~IntType()
+    {
+        delete heapInt;
+        heapInt = nullptr;
+    }
+
     int add( int lhs, int rhs );
     int subtract( int lhs, int rhs );
     int multiply( int lhs, int rhs );
