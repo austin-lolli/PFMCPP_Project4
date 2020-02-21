@@ -75,7 +75,6 @@ struct FloatType
 {
     float* heapFloat = nullptr; 
 
-    FloatType() : heapFloat( new float ) {}
     FloatType( float f ) : heapFloat( new float(f) ) {}
 
     ~FloatType()
@@ -110,7 +109,6 @@ struct DoubleType
 {
     double* heapDub = nullptr;
 
-    DoubleType() : heapDub( new double ) {}
     DoubleType( double d ) : heapDub( new double(d) ) {}
 
     ~DoubleType()
@@ -145,7 +143,6 @@ struct IntType
 {
     int* heapInt = nullptr;
 
-    IntType() : heapInt( new int ) {}
     IntType( int i ) : heapInt( new int(i) ) {}
 
     ~IntType()
@@ -184,20 +181,17 @@ FloatType& FloatType::add( float operand )
 
 FloatType& FloatType::add( const FloatType& operand )
 {
-    *heapFloat += *operand.heapFloat;
-    return *this;
+    return add(*operand.heapFloat);
 }
 
 FloatType& FloatType::add( const DoubleType& operand )
 {
-    *heapFloat += *operand.heapDub;
-    return *this;
+    return add(*operand.heapDub);
 }
 
 FloatType& FloatType::add( const IntType& operand )
 {
-    *heapFloat += *operand.heapInt;
-    return *this;
+    return add(*operand.heapInt);
 }
 
 FloatType& FloatType::subtract( float operand )
@@ -208,20 +202,17 @@ FloatType& FloatType::subtract( float operand )
 
 FloatType& FloatType::subtract( const FloatType& operand )
 {
-    *heapFloat -= *operand.heapFloat;
-    return *this;
+    return subtract(*operand.heapFloat);
 }
 
 FloatType& FloatType::subtract( const DoubleType& operand )
 {
-    *heapFloat -= *operand.heapDub;
-    return *this;
+    return subtract(*operand.heapDub);
 }
 
 FloatType& FloatType::subtract( const IntType& operand )
 {
-    *heapFloat -= *operand.heapInt;
-    return *this;
+    return subtract(*operand.heapInt);  
 }
 
 FloatType& FloatType::multiply( float operand )
@@ -232,20 +223,19 @@ FloatType& FloatType::multiply( float operand )
 
 FloatType& FloatType::multiply( const FloatType& operand )
 {
-    *heapFloat *= *operand.heapFloat;
-    return *this;
+    // *heapFloat *= *operand.heapFloat;
+    // return *this;
+    return multiply( *operand.heapFloat );
 }
 
 FloatType& FloatType::multiply( const DoubleType& operand )
 {
-    *heapFloat *= *operand.heapDub;
-    return *this;
+    return multiply( *operand.heapDub );
 }
 
 FloatType& FloatType::multiply( const IntType& operand )
 {
-    *heapFloat *= *operand.heapInt;
-    return *this;
+    return multiply( *operand.heapInt );
 }
 
 FloatType& FloatType::divide( float operand )
@@ -256,20 +246,17 @@ FloatType& FloatType::divide( float operand )
 
 FloatType& FloatType::divide( const FloatType& operand )
 {
-    *heapFloat /= *operand.heapFloat;
-    return *this;
+    return divide( *operand.heapFloat );
 }
 
 FloatType& FloatType::divide( const DoubleType& operand )
 {
-    *heapFloat /= *operand.heapDub;
-    return *this;
+    return divide( *operand.heapDub );
 }
 
 FloatType& FloatType::divide( const IntType& operand )
 {
-    *heapFloat /= *operand.heapInt;
-    return *this;
+    return divide( *operand.heapInt );
 }
 
 // double member functions
@@ -281,20 +268,17 @@ DoubleType& DoubleType::add( double operand )
 
 DoubleType& DoubleType::add( const FloatType& operand )
 {
-    *heapDub += *operand.heapFloat;
-    return *this;
+    return add( *operand.heapFloat );
 }
 
 DoubleType& DoubleType::add( const DoubleType& operand )
 {
-    *heapDub += *operand.heapDub;
-    return *this;
+    return add( *operand.heapDub );
 }
 
 DoubleType& DoubleType::add( const IntType& operand )
 {
-    *heapDub += *operand.heapInt;
-    return *this;
+    return add( *operand.heapInt );
 }
 
 DoubleType& DoubleType::subtract( double operand )
@@ -305,20 +289,17 @@ DoubleType& DoubleType::subtract( double operand )
 
 DoubleType& DoubleType::subtract( const FloatType& operand )
 {
-    *heapDub -= *operand.heapFloat;
-    return *this;
+    return subtract( *operand.heapFloat );
 }
 
 DoubleType& DoubleType::subtract( const DoubleType& operand )
 {
-    *heapDub -= *operand.heapDub;
-    return *this;
+    return subtract( *operand.heapDub );
 }
 
 DoubleType& DoubleType::subtract( const IntType& operand )
 {
-    *heapDub -= *operand.heapInt;
-    return *this;
+    return subtract( *operand.heapInt );
 }
 
 DoubleType& DoubleType::multiply( double operand )
@@ -329,20 +310,17 @@ DoubleType& DoubleType::multiply( double operand )
 
 DoubleType& DoubleType::multiply( const FloatType& operand )
 {
-    *heapDub *= *operand.heapFloat;
-    return *this;
+    return multiply( *operand.heapFloat );
 }
 
 DoubleType& DoubleType::multiply( const DoubleType& operand )
 {
-    *heapDub *= *operand.heapDub;
-    return *this;
+    return multiply( *operand.heapDub );
 }
 
 DoubleType& DoubleType::multiply( const IntType& operand )
 {
-    *heapDub *= *operand.heapInt;
-    return *this;
+    return multiply( *operand.heapInt );
 }
 
 DoubleType& DoubleType::divide( double operand )
@@ -353,20 +331,17 @@ DoubleType& DoubleType::divide( double operand )
 
 DoubleType& DoubleType::divide( const FloatType& operand )
 {
-    *heapDub /= *operand.heapFloat;
-    return *this;
+    return divide( *operand.heapFloat );
 }
 
 DoubleType& DoubleType::divide( const DoubleType& operand )
 {
-    *heapDub /= *operand.heapDub;
-    return *this;
+    return divide( *operand.heapDub );
 }
 
 DoubleType& DoubleType::divide( const IntType& operand )
 {
-    *heapDub /= *operand.heapInt;
-    return *this;
+    return divide( *operand.heapInt );
 }
 
 // int member functions
@@ -378,20 +353,17 @@ IntType& IntType::add( int operand )
 
 IntType& IntType::add( const FloatType& operand )
 {
-    *heapInt += *operand.heapFloat;
-    return *this;
+    return add( *operand.heapFloat );
 }
 
 IntType& IntType::add( const DoubleType& operand )
 {
-    *heapInt += *operand.heapDub;
-    return *this;
+    return add( *operand.heapDub );
 }
 
 IntType& IntType::add( const IntType& operand )
 {
-    *heapInt += *operand.heapInt;
-    return *this;
+    return add( *operand.heapInt );
 }
 
 IntType& IntType::subtract( int operand )
@@ -402,20 +374,17 @@ IntType& IntType::subtract( int operand )
 
 IntType& IntType::subtract( const FloatType& operand )
 {
-    *heapInt -= *operand.heapFloat;
-    return *this;
+    return subtract( *operand.heapFloat );
 }
 
 IntType& IntType::subtract( const DoubleType& operand )
 {
-    *heapInt -= *operand.heapDub;
-    return *this;
+    return subtract( *operand.heapDub );
 }
 
 IntType& IntType::subtract( const IntType& operand )
 {
-    *heapInt -= *operand.heapInt;
-    return *this;
+    return subtract( *operand.heapInt );
 }
 
 IntType& IntType::multiply( int operand )
@@ -426,20 +395,17 @@ IntType& IntType::multiply( int operand )
 
 IntType& IntType::multiply( const FloatType& operand )
 {
-    *heapInt *= *operand.heapFloat;
-    return *this;
+    return multiply( *operand.heapFloat);
 }
 
 IntType& IntType::multiply( const DoubleType& operand )
 {
-    *heapInt *= *operand.heapDub;
-    return *this;
+    return multiply( *operand.heapDub );
 }
 
 IntType& IntType::multiply( const IntType& operand )
 {
-    *heapInt *= *operand.heapInt;
-    return *this;
+    return multiply( *operand.heapInt );
 }
 
 #include <iostream>
@@ -455,46 +421,21 @@ IntType& IntType::divide( int operand )
     return *this;
 }
 
-#include <iostream>
 IntType& IntType::divide( const FloatType& operand )
 {
-    if( *operand.heapFloat == 0.0f)
-    {
-        std::cout << "Can't divide by 0! Cancelling divide operation."  << std::endl;       
-        return *this;
-    }
-    
-    *heapInt /= *operand.heapFloat;
-    return *this;
+    return divide( *operand.heapFloat );
 }
 
-#include <iostream>
 IntType& IntType::divide( const DoubleType& operand )
 {
-    if( *operand.heapDub == 0.0 )
-    {
-        std::cout << "Can't divide by 0! Cancelling divide operation."  << std::endl;       
-        return *this;
-    }
-    
-    *heapInt /= *operand.heapDub;
-    return *this;
+    return divide( *operand.heapDub );
 }
 
-#include <iostream>
 IntType& IntType::divide( const IntType& operand )
 {
-    if( *operand.heapInt == 0 )
-    {
-        std::cout << "Can't divide by 0! Cancelling divide operation."  << std::endl;       
-        return *this;
-    }
-    
-    *heapInt /= *operand.heapInt;
-    return *this;
+    return divide( *operand.heapInt );
 }
 
-#include <iostream>
 int main()
 {
     FloatType ft( 5.5f );
@@ -505,6 +446,7 @@ int main()
     std::cout << "The result of ft^4 divided by it is: " << *ft.multiply( ft ).multiply( ft ).divide( it ).heapFloat << std::endl;
     std::cout << "The result of dt times 3 plus it is : " << *dt.multiply( 3 ).add( it ).heapDub << std::endl;
     std::cout << "The result of it divided by 3.14 multiplied by dt minus ft is: " << *it.divide( pi ).multiply( dt ).subtract( ft ).heapInt << std::endl;
+    std::cout << "A couple operations followed by a divide by 0, which gets ignored and warns user: " << *it.multiply(it).divide(0).divide(0.0f).divide(0.0).heapInt <<std::endl;
     /*
     std::cout << "ft x it  =  " << *it.multiply( ft ).heapInt << std::endl;
     std::cout << "(it + dt + ft) x 24 = " << *it.add( dt ).add( ft ).multiply( 24 ).heapInt << std::endl;
