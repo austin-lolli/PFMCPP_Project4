@@ -203,13 +203,14 @@ int main()
     IntType it ( 34 );
     DoubleType pi( 3.14 );
 
-    std::cout << "The result of ft^4 divided by it is: " << *ft.multiply( ft ).multiply( ft ).divide( it ).heapFloat << std::endl;
-    std::cout << "The result of dt times 3 plus it is : " << *dt.multiply( 3 ).add( it ).heapDub << std::endl;
-    std::cout << "The result of it divided by 3.14 multiplied by dt minus ft is: " << *it.divide( pi ).multiply( dt ).subtract( ft ).heapInt << std::endl;
-    std::cout << "A couple operations followed by a divide by 0, which gets ignored and warns user: " << *it.multiply(it).divide(0).divide(0.0f).divide(0.0).heapInt <<std::endl;
+    std::cout << "The result of FloatType^4 divided by IntType is: " << ft.multiply( ft ).multiply( ft ).divide( it ) << std::endl;
+    std::cout << "The result of DoubleType times 3 plus IntType is : " << dt.multiply( 3 ).add( it ) << std::endl;
+    std::cout << "The result of IntType divided by 3.14 multiplied by DoubleType minus FloatType is: " << it.divide( pi ).multiply( dt ).subtract( ft ) << std::endl;
+    std::cout << "A couple operations followed by a divide by 0, which gets ignored and warns user: " << std::endl;
+    std::cout << it.multiply(it).divide(0).divide(0.0f).divide(0.0)<<std::endl;
     
-    std::cout << "ft x it  =  " << *it.multiply( ft ).heapInt << std::endl;
-    std::cout << "(it + dt + ft) x 24 = " << *it.add( dt ).add( ft ).multiply( 24 ).heapInt << std::endl;
+    std::cout << "FloatType x IntType  =  " << it.multiply( ft ) << std::endl;
+    std::cout << "(IntType + DoubleType + FloatType) x 24 = " << it.add( dt ).add( ft ).multiply( 24 ) << std::endl;
     
 
 
