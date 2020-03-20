@@ -37,9 +37,12 @@ send me a DM to check your pull request
 
 
 //forward declarations
+/*
+//no longer needed... 
 struct FloatType;
 struct DoubleType;
 struct IntType;
+*/
 
 
 // float UDT 
