@@ -48,58 +48,69 @@ struct IntType;
 // float UDT 
 struct FloatType
 {
-    float* heapFloat = nullptr; 
+    public:
+        FloatType( float f ) : heapFloat( new float(f) ) {}
+        ~FloatType()
+        {
+            delete heapFloat;
+            heapFloat = nullptr;
+        }
 
-    FloatType( float f ) : heapFloat( new float(f) ) {}
-
-    ~FloatType()
-    {
-        delete heapFloat;
-        heapFloat = nullptr;
-    }
+        operator float() { return *heapFloat; }
     
-    FloatType& add( float operand );
-    FloatType& subtract( float operand );
-    FloatType& multiply( float operand );
-    FloatType& divide( float operand );
+        FloatType& add( float operand );
+        FloatType& subtract( float operand );
+        FloatType& multiply( float operand );
+        FloatType& divide( float operand );
+
+    private:
+        float* heapFloat = nullptr; 
+
 };
 
 // double UDT
 struct DoubleType
 {
-    double* heapDub = nullptr;
+    public:
+        DoubleType( double d ) : heapDub( new double(d) ) {}
+        ~DoubleType()
+        {
+            delete heapDub;
+            heapDub = nullptr;
+        }
 
-    DoubleType( double d ) : heapDub( new double(d) ) {}
-
-    ~DoubleType()
-    {
-        delete heapDub;
-        heapDub = nullptr;
-    }
+        operator double() { return *heapDub; }
     
-    DoubleType& add( double operand );
-    DoubleType& subtract( double operand );
-    DoubleType& multiply( double operand );
-    DoubleType& divide( double operand );
+        DoubleType& add( double operand );
+        DoubleType& subtract( double operand );
+        DoubleType& multiply( double operand );
+        DoubleType& divide( double operand );
+
+    private:
+        double* heapDub = nullptr;
+
 };
 
 // int UDT
 struct IntType
 {
-    int* heapInt = nullptr;
+    public:
+        IntType( int i ) : heapInt( new int(i) ) {}
+        ~IntType()
+        {
+            delete heapInt;
+            heapInt = nullptr;
+        }
 
-    IntType( int i ) : heapInt( new int(i) ) {}
+        operator int() { return *heapInt; }
 
-    ~IntType()
-    {
-        delete heapInt;
-        heapInt = nullptr;
-    }
-
-    IntType& add( int operand );
-    IntType& subtract( int operand );
-    IntType& multiply( int operand );  
-    IntType& divide( int operand );
+        IntType& add( int operand );
+        IntType& subtract( int operand );
+        IntType& multiply( int operand );  
+        IntType& divide( int operand );
+    
+    private:
+        int* heapInt = nullptr;
 };
 
 // float member functions 
@@ -186,7 +197,7 @@ IntType& IntType::divide( int operand )
 
 int main()
 {
-    /*
+    
     FloatType ft( 5.5f );
     DoubleType dt( 11.1 );
     IntType it ( 34 );
@@ -199,7 +210,7 @@ int main()
     
     std::cout << "ft x it  =  " << *it.multiply( ft ).heapInt << std::endl;
     std::cout << "(it + dt + ft) x 24 = " << *it.add( dt ).add( ft ).multiply( 24 ).heapInt << std::endl;
-    */
+    
 
 
     std::cout << "good to go!" << std::endl;
