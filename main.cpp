@@ -68,6 +68,9 @@ private:
 };
 
 
+struct FloatType;
+struct IntType;
+struct DoubleType;
 
 
 // float UDT 
@@ -88,8 +91,14 @@ struct FloatType
         FloatType& multiply( float operand );
         FloatType& divide( float operand );
 
+        FloatType& pow( const FloatType& ft);
+        FloatType& pow( const DoubleType& dt);
+        FloatType& pow( const IntType& it);
+        FloatType& pow( float fl);
+
     private:
         float* heapFloat = nullptr; 
+        float* powInternal();
 
 };
 
@@ -111,8 +120,14 @@ struct DoubleType
         DoubleType& multiply( double operand );
         DoubleType& divide( double operand );
 
+        DoubleType& pow( const FloatType& ft);
+        DoubleType& pow( const DoubleType& dt);
+        DoubleType& pow( const IntType& it);
+        DoubleType& pow( double dbl);
+
     private:
         double* heapDub = nullptr;
+        double* powInternal();
 
 };
 
@@ -133,9 +148,15 @@ struct IntType
         IntType& subtract( int operand );
         IntType& multiply( int operand );  
         IntType& divide( int operand );
+
+        IntType& pow( const FloatType& ft);
+        IntType& pow( const DoubleType& dt);
+        IntType& pow( const IntType& it);
+        IntType& pow( int ig);
     
     private:
         int* heapInt = nullptr;
+        int* powInternal();
 };
 
 // float member functions 
