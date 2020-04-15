@@ -55,6 +55,8 @@ send me a DM to check your pull request
  Wait for my code review.
  */
 
+#include <cmath>
+
 struct Point
 {
     Point& multiply(float m)
@@ -98,7 +100,7 @@ struct FloatType
 
     private:
         float* heapFloat = nullptr; 
-        float* powInternal();
+        void powInternal();
 
 };
 
@@ -127,7 +129,7 @@ struct DoubleType
 
     private:
         double* heapDub = nullptr;
-        double* powInternal();
+        void powInternal();
 
 };
 
@@ -156,8 +158,88 @@ struct IntType
     
     private:
         int* heapInt = nullptr;
-        int* powInternal();
+        void powInternal();
 };
+
+// pow implementations for FloatType
+FloatType& FloatType::pow( const FloatType& ft)
+{
+
+}
+
+FloatType& FloatType::pow( const DoubleType& dt)
+{
+
+}
+
+FloatType& FloatType::pow( const IntType& it)
+{
+
+}
+
+FloatType& FloatType::pow( float fl)
+{
+
+}
+
+// pow implementations for DoubleType
+DoubleType& DoubleType::pow( const FloatType& ft)
+{
+
+}
+
+DoubleType& DoubleType::pow( const DoubleType& dt)
+{
+
+}
+
+DoubleType& DoubleType::pow( const IntType& it)
+{
+
+}
+
+DoubleType& DoubleType::pow( double dbl)
+{
+
+}
+
+// pow implementations for IntType
+IntType& IntType::pow( const FloatType& ft)
+{
+
+}
+
+IntType& IntType::pow( const DoubleType& dt)
+{
+
+}
+
+IntType& IntType::pow( const IntType& it)
+{
+
+}
+
+IntType& IntType::pow( int ig)
+{
+
+}
+
+
+// powInternal implementations
+void FloatType::powInternal()
+{
+
+}
+
+void DoubleType::powInternal()
+{
+    
+}
+
+void IntType::powInternal()
+{
+    
+}
 
 // float member functions 
 FloatType& FloatType::add( float operand )
