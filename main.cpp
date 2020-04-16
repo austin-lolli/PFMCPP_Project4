@@ -86,21 +86,21 @@ struct FloatType
             heapFloat = nullptr;
         }
 
-        operator float() { return *heapFloat; }
+        operator float() const { return *heapFloat; }
     
         FloatType& add( float operand );
         FloatType& subtract( float operand );
         FloatType& multiply( float operand );
         FloatType& divide( float operand );
 
-        FloatType& pow( const FloatType& ft);
-        FloatType& pow( const DoubleType& dt);
-        FloatType& pow( const IntType& it);
-        FloatType& pow( float fl);
+        FloatType& pow( const FloatType& operand );
+        FloatType& pow( const DoubleType& operand );
+        FloatType& pow( const IntType& operand );
+        FloatType& pow( float operand );
 
     private:
         float* heapFloat = nullptr; 
-        void powInternal();
+        FloatType& powInternal( float x );
 
 };
 
@@ -115,21 +115,21 @@ struct DoubleType
             heapDub = nullptr;
         }
 
-        operator double() { return *heapDub; }
+        operator double() const { return *heapDub; }
     
         DoubleType& add( double operand );
         DoubleType& subtract( double operand );
         DoubleType& multiply( double operand );
         DoubleType& divide( double operand );
 
-        DoubleType& pow( const FloatType& ft);
-        DoubleType& pow( const DoubleType& dt);
-        DoubleType& pow( const IntType& it);
-        DoubleType& pow( double dbl);
+        DoubleType& pow( const FloatType& operand );
+        DoubleType& pow( const DoubleType& operand );
+        DoubleType& pow( const IntType& operand );
+        DoubleType& pow( double operand );
 
     private:
         double* heapDub = nullptr;
-        void powInternal();
+        DoubleType& powInternal( double x );
 
 };
 
@@ -144,99 +144,99 @@ struct IntType
             heapInt = nullptr;
         }
 
-        operator int() { return *heapInt; }
+        operator int() const { return *heapInt; }
 
         IntType& add( int operand );
         IntType& subtract( int operand );
         IntType& multiply( int operand );  
         IntType& divide( int operand );
 
-        IntType& pow( const FloatType& ft);
-        IntType& pow( const DoubleType& dt);
-        IntType& pow( const IntType& it);
-        IntType& pow( int ig);
+        IntType& pow( const FloatType& operand );
+        IntType& pow( const DoubleType& operand );
+        IntType& pow( const IntType& operand );
+        IntType& pow( int operand );
     
     private:
         int* heapInt = nullptr;
-        void powInternal();
+        IntType& powInternal( int x );
 };
 
 // pow implementations for FloatType
-FloatType& FloatType::pow( const FloatType& ft)
+FloatType& FloatType::pow( const FloatType& operand )
 {
-
+    return powInternal( static_cast<float>(operand) );
 }
 
-FloatType& FloatType::pow( const DoubleType& dt)
+FloatType& FloatType::pow( const DoubleType& operand )
 {
-
+    return powInternal( static_cast<float>(operand) );
 }
 
-FloatType& FloatType::pow( const IntType& it)
+FloatType& FloatType::pow( const IntType& operand )
 {
-
+    return powInternal( static_cast<float>(operand) );
 }
 
-FloatType& FloatType::pow( float fl)
+FloatType& FloatType::pow( float operand )
 {
-
+    return powInternal(operand);
 }
 
 // pow implementations for DoubleType
-DoubleType& DoubleType::pow( const FloatType& ft)
+DoubleType& DoubleType::pow( const FloatType& operand )
 {
-
+    return powInternal( static_cast<double>(operand) );
 }
 
-DoubleType& DoubleType::pow( const DoubleType& dt)
+DoubleType& DoubleType::pow( const DoubleType& operand )
 {
-
+    return powInternal( static_cast<double>(operand) );
 }
 
-DoubleType& DoubleType::pow( const IntType& it)
+DoubleType& DoubleType::pow( const IntType& operand )
 {
-
+    return powInternal( static_cast<double>(operand) );
 }
 
-DoubleType& DoubleType::pow( double dbl)
+DoubleType& DoubleType::pow( double operand )
 {
-
+    return powInternal(operand);
 }
 
 // pow implementations for IntType
-IntType& IntType::pow( const FloatType& ft)
+IntType& IntType::pow( const FloatType& operand )
 {
-
+    return powInternal( static_cast<int>(operand) );
 }
 
-IntType& IntType::pow( const DoubleType& dt)
+IntType& IntType::pow( const DoubleType& operand )
 {
-
+    return powInternal( static_cast<int>(operand) );
 }
 
-IntType& IntType::pow( const IntType& it)
+IntType& IntType::pow( const IntType& operand )
 {
-
+    return powInternal( static_cast<int>(operand) );
 }
 
-IntType& IntType::pow( int ig)
+IntType& IntType::pow( int operand )
 {
-
+    return powInternal(operand);
 }
 
 
 // powInternal implementations
-void FloatType::powInternal()
+FloatType& FloatType::powInternal( float x )
 {
 
 }
 
-void DoubleType::powInternal()
+DoubleType& DoubleType::powInternal( double x )
 {
     
 }
 
-void IntType::powInternal()
+IntType& IntType::powInternal( int x )
 {
     
 }
