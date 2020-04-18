@@ -57,22 +57,33 @@ send me a DM to check your pull request
 
 #include <cmath>
 
+struct FloatType;
+struct IntType;
+struct DoubleType;
+
 struct Point
 {
+    Point(float a, float b) : x(a), y(b) {}
+    Point(FloatType& a, FloatType& b);
+    Point(DoubleType& a, DoubleType& b);
+    Point(IntType& a, IntType& b);
+
     Point& multiply(float m)
     {
         x *= m;
         y *= m;
         return *this;
     }
+    
+    Point& multiply( FloatType& m );
+    Point& multiply( DoubleType& m );
+    Point& multiply( IntType& m );
+
+    void toString();
+
 private:
     float x{0}, y{0};
 };
-
-
-struct FloatType;
-struct IntType;
-struct DoubleType;
 
 
 // float UDT 
@@ -161,6 +172,42 @@ struct IntType
         IntType& powInternal( int x );
 };
 
+//point constructor implementations
+Point::Point(FloatType& a, FloatType& b) : x(a), y(b) {}
+
+Point::Point(DoubleType& a, DoubleType& b) : x( static_cast<float>(a) ), y( static_cast<float>(b) ) {}
+
+Point::Point(IntType& a, IntType& b) : x( static_cast<float>(a) ), y( static_cast<float>(b) ) {}
+
+//point multiply UDT implementations
+Point& Point::multiply( FloatType& m )
+{
+    x *= m;
+    y *= m;
+    return *this;
+}
+
+Point& Point::multiply( DoubleType& m )
+{
+    x *= static_cast<float>(m);
+    y *= static_cast<float>(m);
+    return *this;
+}
+
+Point& Point::multiply( IntType& m )
+{
+    x *= static_cast<float>(m);
+    y *= static_cast<float>(m);
+    return *this;
+}
+
+// point to string
+#include <iostream>
+void Point::toString()
+{
+    std::cout << "( " << x << ", " << y << " )" << std::endl;
+}
+
 // pow implementations for FloatType
 FloatType& FloatType::pow( const FloatType& operand )
 {
@@ -228,17 +275,30 @@ IntType& IntType::pow( int operand )
 // powInternal implementations
 FloatType& FloatType::powInternal( float x )
 {
-
+    if( heapFloat != nullptr )
+    {
+        *heapFloat = std::pow( *heapFloat, x );
+    }
+    return *this;
 }
 
 DoubleType& DoubleType::powInternal( double x )
 {
-    
+    if( heapDub != nullptr )
+    {
+        *heapDub = std::pow( *heapDub, x );
+    }
+    return *this;
 }
 
 IntType& IntType::powInternal( int x )
 {
-    
+    if( heapInt != nullptr )
+    {
+        //static cast because pow returns a float or double
+        *heapInt = static_cast<int>( std::pow( *heapInt, x ) );
+    }
+    return *this;
 }
 
 // float member functions 
@@ -340,6 +400,54 @@ int main()
     std::cout << "FloatType x IntType  =  " << it.multiply( static_cast<int>(ft) ) << std::endl;
     std::cout << "(IntType + DoubleType + FloatType) x 24 = " << it.add( static_cast<int>(dt) ).add( static_cast<int>(ft) ).multiply( 24 ) << std::endl;
     
+    std::cout << std::endl;
+    std::cout << std::endl;
+
+    FloatType powFloat( 2.4f );
+    DoubleType powDub( 12.25 );
+    IntType powInt( 2 );
+    float a = 2.5f;
+    double b = 1.89;
+    int c = 5;
+
+    std::cout << "Pow functions test: " << std::endl;
+    std::cout << powFloat << " ^ " << a << " = " <<  powFloat.pow(a) << std::endl;
+    std::cout << powDub << " ^ " << b << " = " << powDub.pow(b) << std::endl;
+    std::cout << powInt << " ^ "<< c << " = " << powInt.pow(c) << std::endl;
+    
+    std::cout << std::endl;
+    std::cout << "Resetting UDT's for Test 2..." << std::endl;
+    powFloat.pow(1/a);
+    powDub.pow(1/b);
+    powInt.divide(16);
+    std::cout << std::endl;
+    
+    std::cout << "Test 2, one UDT ^ another UDT: " << std::endl;
+    std::cout << powFloat << " ^ " << powInt << " = " <<  powFloat.pow(powInt) << std::endl;
+    std::cout << powDub << " ^ " << powFloat << " = " << powDub.pow(powFloat) << std::endl;
+    std::cout << powInt << " ^ "<< powDub << " = " << powInt.pow(powDub) << std::endl;   
+
+    FloatType xFloat( 1.3f );
+    FloatType yFloat( 2.9f );
+    DoubleType xDouble( 3.33 );
+    DoubleType yDouble( 1.75 );
+    IntType xInt( 4 );
+    IntType yInt( -2 );
+
+    std::cout << std::endl;
+    std::cout << std::endl;
+
+    Point pFloat( xFloat, yFloat);
+    Point pDouble( xDouble, yDouble);
+    Point pInt( xInt, yInt);
+
+    std::cout << "Initial Point Values: " << std::endl;
+    std::cout << "pFloat: ";
+    pFloat.toString();
+    std::cout << "pDouble: ";
+    pDouble.toString();
+    std::cout << "pInt: ";
+    pInt.toString();
 
     std::cout << "good to go!" << std::endl;
 }
