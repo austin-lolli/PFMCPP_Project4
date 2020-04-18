@@ -449,5 +449,14 @@ int main()
     std::cout << "pInt: ";
     pInt.toString();
 
+    std::cout << std::endl;
+
+    std::cout << "pFloat x 2.1f = ";
+    pFloat.multiply(2.1f).toString();
+    std::cout << "pDouble x -1.4f = ";
+    pDouble.multiply(-1.4f).toString();
+    std::cout << "pInt x .75f = ";
+    pInt.multiply(.75f).toString();
+
     std::cout << "good to go!" << std::endl;
 }
