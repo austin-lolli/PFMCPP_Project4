@@ -173,11 +173,20 @@ struct IntType
 };
 
 //point constructor implementations
-Point::Point(FloatType& a, FloatType& b) : x(a), y(b) {}
+Point::Point(FloatType& a, FloatType& b) 
+{ 
+    Point( a, b);
+}
 
-Point::Point(DoubleType& a, DoubleType& b) : x( static_cast<float>(a) ), y( static_cast<float>(b) ) {}
+Point::Point(DoubleType& a, DoubleType& b) 
+{ 
+    Point ( static_cast<float>(a), static_cast<float>(b) );
+}
 
-Point::Point(IntType& a, IntType& b) : x( static_cast<float>(a) ), y( static_cast<float>(b) ) {}
+Point::Point(IntType& a, IntType& b)
+{ 
+    Point ( static_cast<float>(a), static_cast<float>(b) );
+}
 
 //point multiply UDT implementations
 Point& Point::multiply( FloatType& m )
