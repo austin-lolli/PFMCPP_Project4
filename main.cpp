@@ -173,41 +173,27 @@ struct IntType
 };
 
 //point constructor implementations
-Point::Point(FloatType& a, FloatType& b) 
-{ 
-    Point( a, b);
-}
+Point::Point(FloatType& a, FloatType& b) : Point(static_cast<float>(a), static_cast<float>(b) ) { } 
 
-Point::Point(DoubleType& a, DoubleType& b) 
-{ 
-    Point ( static_cast<float>(a), static_cast<float>(b) );
-}
+Point::Point(DoubleType& a, DoubleType& b) : Point ( static_cast<float>(a), static_cast<float>(b) ) { }
 
-Point::Point(IntType& a, IntType& b)
-{ 
-    Point ( static_cast<float>(a), static_cast<float>(b) );
-}
+
+Point::Point(IntType& a, IntType& b) : Point ( static_cast<float>(a), static_cast<float>(b) ) { }
 
 //point multiply UDT implementations
 Point& Point::multiply( FloatType& m )
 {
-    x *= m;
-    y *= m;
-    return *this;
+    return Point::multiply(static_cast<float>(m));
 }
 
 Point& Point::multiply( DoubleType& m )
 {
-    x *= static_cast<float>(m);
-    y *= static_cast<float>(m);
-    return *this;
+    return Point::multiply(static_cast<float>(m));
 }
 
 Point& Point::multiply( IntType& m )
 {
-    x *= static_cast<float>(m);
-    y *= static_cast<float>(m);
-    return *this;
+    return Point::multiply(static_cast<float>(m));
 }
 
 // point to string
@@ -434,7 +420,7 @@ int main()
     std::cout << "Test 2, one UDT ^ another UDT: " << std::endl;
     std::cout << powFloat << " ^ " << powInt << " = " <<  powFloat.pow(powInt) << std::endl;
     std::cout << powDub << " ^ " << powFloat << " = " << powDub.pow(powFloat) << std::endl;
-    std::cout << powInt << " ^ "<< powDub << " = " << powInt.pow(powDub) << std::endl;   
+    std::cout << powInt << " ^ "<< powFloat << " = " << powInt.pow(powFloat) << std::endl;   
 
     FloatType xFloat( 1.3f );
     FloatType yFloat( 2.9f );
