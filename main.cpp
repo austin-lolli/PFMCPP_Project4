@@ -55,19 +55,35 @@ send me a DM to check your pull request
  Wait for my code review.
  */
 
+#include <cmath>
+
+struct FloatType;
+struct IntType;
+struct DoubleType;
+
 struct Point
 {
+    Point(float a, float b) : x(a), y(b) {}
+    Point(FloatType& a, FloatType& b);
+    Point(DoubleType& a, DoubleType& b);
+    Point(IntType& a, IntType& b);
+
     Point& multiply(float m)
     {
         x *= m;
         y *= m;
         return *this;
     }
+    
+    Point& multiply( FloatType& m );
+    Point& multiply( DoubleType& m );
+    Point& multiply( IntType& m );
+
+    void toString();
+
 private:
     float x{0}, y{0};
 };
-
-
 
 
 // float UDT 
@@ -81,15 +97,21 @@ struct FloatType
             heapFloat = nullptr;
         }
 
-        operator float() { return *heapFloat; }
+        operator float() const { return *heapFloat; }
     
         FloatType& add( float operand );
         FloatType& subtract( float operand );
         FloatType& multiply( float operand );
         FloatType& divide( float operand );
 
+        FloatType& pow( const FloatType& operand );
+        FloatType& pow( const DoubleType& operand );
+        FloatType& pow( const IntType& operand );
+        FloatType& pow( float operand );
+
     private:
         float* heapFloat = nullptr; 
+        FloatType& powInternal( float x );
 
 };
 
@@ -104,15 +126,21 @@ struct DoubleType
             heapDub = nullptr;
         }
 
-        operator double() { return *heapDub; }
+        operator double() const { return *heapDub; }
     
         DoubleType& add( double operand );
         DoubleType& subtract( double operand );
         DoubleType& multiply( double operand );
         DoubleType& divide( double operand );
 
+        DoubleType& pow( const FloatType& operand );
+        DoubleType& pow( const DoubleType& operand );
+        DoubleType& pow( const IntType& operand );
+        DoubleType& pow( double operand );
+
     private:
         double* heapDub = nullptr;
+        DoubleType& powInternal( double x );
 
 };
 
@@ -127,16 +155,146 @@ struct IntType
             heapInt = nullptr;
         }
 
-        operator int() { return *heapInt; }
+        operator int() const { return *heapInt; }
 
         IntType& add( int operand );
         IntType& subtract( int operand );
         IntType& multiply( int operand );  
         IntType& divide( int operand );
+
+        IntType& pow( const FloatType& operand );
+        IntType& pow( const DoubleType& operand );
+        IntType& pow( const IntType& operand );
+        IntType& pow( int operand );
     
     private:
         int* heapInt = nullptr;
+        IntType& powInternal( int x );
 };
+
+//point constructor implementations
+Point::Point(FloatType& a, FloatType& b) : Point(static_cast<float>(a), static_cast<float>(b) ) { } 
+
+Point::Point(DoubleType& a, DoubleType& b) : Point ( static_cast<float>(a), static_cast<float>(b) ) { }
+
+
+Point::Point(IntType& a, IntType& b) : Point ( static_cast<float>(a), static_cast<float>(b) ) { }
+
+//point multiply UDT implementations
+Point& Point::multiply( FloatType& m )
+{
+    return multiply(static_cast<float>(m));
+}
+
+Point& Point::multiply( DoubleType& m )
+{
+    return multiply(static_cast<float>(m));
+}
+
+Point& Point::multiply( IntType& m )
+{
+    return multiply(static_cast<float>(m));
+}
+
+// point to string
+#include <iostream>
+void Point::toString()
+{
+    std::cout << "( " << x << ", " << y << " )" << std::endl;
+}
+
+// pow implementations for FloatType
+FloatType& FloatType::pow( const FloatType& operand )
+{
+    return powInternal( static_cast<float>(operand) );
+}
+
+FloatType& FloatType::pow( const DoubleType& operand )
+{
+    return powInternal( static_cast<float>(operand) );
+}
+
+FloatType& FloatType::pow( const IntType& operand )
+{
+    return powInternal( static_cast<float>(operand) );
+}
+
+FloatType& FloatType::pow( float operand )
+{
+    return powInternal(operand);
+}
+
+// pow implementations for DoubleType
+DoubleType& DoubleType::pow( const FloatType& operand )
+{
+    return powInternal( static_cast<double>(operand) );
+}
+
+DoubleType& DoubleType::pow( const DoubleType& operand )
+{
+    return powInternal( static_cast<double>(operand) );
+}
+
+DoubleType& DoubleType::pow( const IntType& operand )
+{
+    return powInternal( static_cast<double>(operand) );
+}
+
+DoubleType& DoubleType::pow( double operand )
+{
+    return powInternal(operand);
+}
+
+// pow implementations for IntType
+IntType& IntType::pow( const FloatType& operand )
+{
+    return powInternal( static_cast<int>(operand) );
+}
+
+IntType& IntType::pow( const DoubleType& operand )
+{
+    return powInternal( static_cast<int>(operand) );
+}
+
+IntType& IntType::pow( const IntType& operand )
+{
+    return powInternal( static_cast<int>(operand) );
+}
+
+IntType& IntType::pow( int operand )
+{
+    return powInternal(operand);
+}
+
+
+// powInternal implementations
+FloatType& FloatType::powInternal( float x )
+{
+    if( heapFloat != nullptr )
+    {
+        *heapFloat = std::pow( *heapFloat, x );
+    }
+    return *this;
+}
+
+DoubleType& DoubleType::powInternal( double x )
+{
+    if( heapDub != nullptr )
+    {
+        *heapDub = std::pow( *heapDub, x );
+    }
+    return *this;
+}
+
+IntType& IntType::powInternal( int x )
+{
+    if( heapInt != nullptr )
+    {
+        //static cast because pow returns a float or double
+        *heapInt = static_cast<int>( std::pow( *heapInt, x ) );
+    }
+    return *this;
+}
 
 // float member functions 
 FloatType& FloatType::add( float operand )
@@ -237,6 +395,63 @@ int main()
     std::cout << "FloatType x IntType  =  " << it.multiply( static_cast<int>(ft) ) << std::endl;
     std::cout << "(IntType + DoubleType + FloatType) x 24 = " << it.add( static_cast<int>(dt) ).add( static_cast<int>(ft) ).multiply( 24 ) << std::endl;
     
+    std::cout << std::endl;
+    std::cout << std::endl;
+
+    FloatType powFloat( 2.4f );
+    DoubleType powDub( 12.25 );
+    IntType powInt( 2 );
+    float a = 2.5f;
+    double b = 1.89;
+    int c = 5;
+
+    std::cout << "Pow functions test: " << std::endl;
+    std::cout << powFloat << " ^ " << a << " = " <<  powFloat.pow(a) << std::endl;
+    std::cout << powDub << " ^ " << b << " = " << powDub.pow(b) << std::endl;
+    std::cout << powInt << " ^ "<< c << " = " << powInt.pow(c) << std::endl;
+    
+    std::cout << std::endl;
+    std::cout << "Resetting UDT's for Test 2..." << std::endl;
+    powFloat.pow(1/a);
+    powDub.pow(1/b);
+    powInt.divide(16);
+    std::cout << std::endl;
+    
+    std::cout << "Test 2, one UDT ^ another UDT: " << std::endl;
+    std::cout << powFloat << " ^ " << powInt << " = " <<  powFloat.pow(powInt) << std::endl;
+    std::cout << powDub << " ^ " << powFloat << " = " << powDub.pow(powFloat) << std::endl;
+    std::cout << powInt << " ^ "<< powFloat << " = " << powInt.pow(powFloat) << std::endl;   
+
+    FloatType xFloat( 1.3f );
+    FloatType yFloat( 2.9f );
+    DoubleType xDouble( 3.33 );
+    DoubleType yDouble( 1.75 );
+    IntType xInt( 4 );
+    IntType yInt( -2 );
+
+    std::cout << std::endl;
+    std::cout << std::endl;
+
+    Point pFloat( xFloat, yFloat);
+    Point pDouble( xDouble, yDouble);
+    Point pInt( xInt, yInt);
+
+    std::cout << "Initial Point Values: " << std::endl;
+    std::cout << "pFloat: ";
+    pFloat.toString();
+    std::cout << "pDouble: ";
+    pDouble.toString();
+    std::cout << "pInt: ";
+    pInt.toString();
+
+    std::cout << std::endl;
+
+    std::cout << "pFloat x 2.1f = ";
+    pFloat.multiply(2.1f).toString();
+    std::cout << "pDouble x -1.4f = ";
+    pDouble.multiply(-1.4f).toString();
+    std::cout << "pInt x .75f = ";
+    pInt.multiply(.75f).toString();
 
     std::cout << "good to go!" << std::endl;
 }
