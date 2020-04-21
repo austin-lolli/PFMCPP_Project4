@@ -183,17 +183,17 @@ Point::Point(IntType& a, IntType& b) : Point ( static_cast<float>(a), static_cas
 //point multiply UDT implementations
 Point& Point::multiply( FloatType& m )
 {
-    return Point::multiply(static_cast<float>(m));
+    return multiply(static_cast<float>(m));
 }
 
 Point& Point::multiply( DoubleType& m )
 {
-    return Point::multiply(static_cast<float>(m));
+    return multiply(static_cast<float>(m));
 }
 
 Point& Point::multiply( IntType& m )
 {
-    return Point::multiply(static_cast<float>(m));
+    return multiply(static_cast<float>(m));
 }
 
 // point to string
