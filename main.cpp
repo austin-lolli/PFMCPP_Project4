@@ -103,6 +103,8 @@ struct FloatType
 {
     public:
         FloatType( float f ) : heapFloat( new float(f) ) {}
+        FloatType() : FloatType(0) {}
+
         ~FloatType()
         {
             delete heapFloat;
@@ -183,6 +185,12 @@ struct IntType
         int* heapInt = nullptr;
         IntType& powInternal( int x );
 };
+
+//float type operators
+FloatType operator+=(const FloatType x, const float y)
+{
+    return{x+y};
+}
 
 //point constructor implementations
 Point::Point(FloatType& a, FloatType& b) : Point(static_cast<float>(a), static_cast<float>(b) ) { } 
@@ -398,6 +406,14 @@ int main()
     IntType it ( 34 );
     DoubleType pi( 3.14 );
 
+    float x = 3.1f;
+
+
+    std::cout << ft << std::endl;
+    ft+=x;
+    std::cout << ft << std::endl;
+
+/*
     std::cout << "The result of FloatType^4 divided by IntType is: " << ft.multiply( ft ).multiply( ft ).divide( it ) << std::endl;
     std::cout << "The result of DoubleType times 3 plus IntType is : " << dt.multiply( 3 ).add( it ) << std::endl;
     std::cout << "The result of IntType divided by 3.14 multiplied by DoubleType minus FloatType is: " << it.divide( static_cast<int>(pi) ).multiply( static_cast<int>(dt) ).subtract( static_cast<int>(ft) ) << std::endl;
@@ -464,6 +480,7 @@ int main()
     pDouble.multiply(-1.4f).toString();
     std::cout << "pInt x .75f = ";
     pInt.multiply(.75f).toString();
+    */
 
     std::cout << "good to go!" << std::endl;
 }
