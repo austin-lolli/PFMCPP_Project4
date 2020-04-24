@@ -112,11 +112,37 @@ struct FloatType
         }
 
         operator float() const { return *heapFloat; }
-    
-        FloatType& add( float operand );
-        FloatType& subtract( float operand );
-        FloatType& multiply( float operand );
-        FloatType& divide( float operand );
+
+        FloatType& operator+=( const float y )
+        {
+            *heapFloat += y;
+            return *this;
+        }
+
+        FloatType& operator-=( const float y )
+        {
+            *heapFloat -= y;
+            return *this;
+        }
+
+        FloatType& operator*=( const float y )
+        {
+            *heapFloat *= y;
+            return *this;
+        }
+
+        FloatType& operator/=( const float y )
+        {
+            *heapFloat /= y;
+            return *this;
+        }
+
+        /*
+        FloatType& add( int operand );
+        FloatType& subtract( int operand );
+        FloatType& multiply( int operand );  
+        FloatType& divide( int operand );
+        */
 
         FloatType& pow( const FloatType& operand );
         FloatType& pow( const DoubleType& operand );
@@ -141,12 +167,38 @@ struct DoubleType
         }
 
         operator double() const { return *heapDub; }
-    
-        DoubleType& add( double operand );
-        DoubleType& subtract( double operand );
-        DoubleType& multiply( double operand );
-        DoubleType& divide( double operand );
 
+        DoubleType& operator+=( const double y )
+        {
+            *heapDub += y;
+            return *this;
+        }
+
+        DoubleType& operator-=( const double y )
+        {
+            *heapDub -= y;
+            return *this;
+        }
+
+        DoubleType& operator*=( const double y )
+        {
+            *heapDub *= y;
+            return *this;
+        }
+
+        DoubleType& operator/=( const double y )
+        {
+            *heapDub /= y;
+            return *this;
+        }
+
+        /*
+        DoubleType& add( int operand );
+        DoubleType& subtract( int operand );
+        DoubleType& multiply( int operand );  
+        DoubleType& divide( int operand );
+        */
+    
         DoubleType& pow( const FloatType& operand );
         DoubleType& pow( const DoubleType& operand );
         DoubleType& pow( const IntType& operand );
@@ -171,10 +223,36 @@ struct IntType
 
         operator int() const { return *heapInt; }
 
+        IntType& operator+=( const int y )
+        {
+            *heapInt += y;
+            return *this;
+        }
+
+        IntType& operator-=( const int y )
+        {
+            *heapInt -= y;
+            return *this;
+        }
+
+        IntType& operator*=( const int y )
+        {
+            *heapInt *= y;
+            return *this;
+        }
+
+        IntType& operator/=( const int y )
+        {
+            *heapInt /= y;
+            return *this;
+        }
+
+        /*
         IntType& add( int operand );
         IntType& subtract( int operand );
         IntType& multiply( int operand );  
         IntType& divide( int operand );
+        */
 
         IntType& pow( const FloatType& operand );
         IntType& pow( const DoubleType& operand );
@@ -187,10 +265,7 @@ struct IntType
 };
 
 //float type operators
-FloatType operator+=(const FloatType x, const float y)
-{
-    return{x+y};
-}
+
 
 //point constructor implementations
 Point::Point(FloatType& a, FloatType& b) : Point(static_cast<float>(a), static_cast<float>(b) ) { } 
@@ -316,6 +391,7 @@ IntType& IntType::powInternal( int x )
     return *this;
 }
 
+/*
 // float member functions 
 FloatType& FloatType::add( float operand )
 {
@@ -397,6 +473,7 @@ IntType& IntType::divide( int operand )
     *heapInt /= operand;
     return *this;
 }
+*/
 
 int main()
 {
@@ -409,7 +486,7 @@ int main()
     float x = 3.1f;
 
 
-    std::cout << ft << std::endl;
+    std::cout << ft << " + " << x << std::endl;
     ft+=x;
     std::cout << ft << std::endl;
 
@@ -425,6 +502,7 @@ int main()
     
     std::cout << std::endl;
     std::cout << std::endl;
+    */
 
     FloatType powFloat( 2.4f );
     DoubleType powDub( 12.25 );
@@ -442,7 +520,7 @@ int main()
     std::cout << "Resetting UDT's for Test 2..." << std::endl;
     powFloat.pow(1/a);
     powDub.pow(1/b);
-    powInt.divide(16);
+    powInt/=16; // changed value reset from divide function to operator
     std::cout << std::endl;
     
     std::cout << "Test 2, one UDT ^ another UDT: " << std::endl;
@@ -480,7 +558,8 @@ int main()
     pDouble.multiply(-1.4f).toString();
     std::cout << "pInt x .75f = ";
     pInt.multiply(.75f).toString();
-    */
+    
+    
 
     std::cout << "good to go!" << std::endl;
 }
