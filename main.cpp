@@ -483,13 +483,6 @@ int main()
     IntType it ( 34 );
     DoubleType pi( 3.14 );
 
-    float x = 3.1f;
-
-
-    std::cout << ft << " + " << x << std::endl;
-    ft+=x;
-    std::cout << ft << std::endl;
-
 /*
     std::cout << "The result of FloatType^4 divided by IntType is: " << ft.multiply( ft ).multiply( ft ).divide( it ) << std::endl;
     std::cout << "The result of DoubleType times 3 plus IntType is : " << dt.multiply( 3 ).add( it ) << std::endl;
@@ -511,6 +504,16 @@ int main()
     double b = 1.89;
     int c = 5;
 
+    std::cout << "New tests added for Project 4 Part 5 (Operator Overloading):" << std::endl;
+    std::cout << powFloat << " + " << b << " = " << (powFloat+=static_cast<float>(b)) << std::endl;
+    std::cout << powFloat << " * " << it << " = " << (powFloat*=static_cast<float>(it)) << std::endl;
+    std::cout << dt << " * " << powDub << " = " << (dt*=powDub) << std::endl;
+    std::cout << dt << " / " << powFloat << " = " << (dt/=static_cast<double>(powFloat)) << std::endl;
+    std::cout << powInt << " - " << ft << " = " << (powInt-=static_cast<int>(ft)) << std::endl;
+    std::cout << powDub << " * " << c << " = " << (powDub*=static_cast<double>(c)) << std::endl;
+
+    std::cout << std::endl;
+
     std::cout << "Pow functions test: " << std::endl;
     std::cout << powFloat << " ^ " << a << " = " <<  powFloat.pow(a) << std::endl;
     std::cout << powDub << " ^ " << b << " = " << powDub.pow(b) << std::endl;
@@ -526,7 +529,7 @@ int main()
     std::cout << "Test 2, one UDT ^ another UDT: " << std::endl;
     std::cout << powFloat << " ^ " << powInt << " = " <<  powFloat.pow(powInt) << std::endl;
     std::cout << powDub << " ^ " << powFloat << " = " << powDub.pow(powFloat) << std::endl;
-    std::cout << powInt << " ^ "<< powFloat << " = " << powInt.pow(powFloat) << std::endl;   
+    std::cout << powInt << " ^ "<< powFloat << " = " << powInt.pow(powFloat) << std::endl;
 
     FloatType xFloat( 1.3f );
     FloatType yFloat( 2.9f );
@@ -535,7 +538,6 @@ int main()
     IntType xInt( 4 );
     IntType yInt( -2 );
 
-    std::cout << std::endl;
     std::cout << std::endl;
 
     Point pFloat( xFloat, yFloat);
