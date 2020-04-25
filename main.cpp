@@ -1,68 +1,57 @@
-
-#include <iostream>
 /*
-Project 4: Part 5 / 9
- video: Chapter 5 Part 2
- Operator Overloading.
-
-Do not delete your previous main. 
-
- Create a branch named Part5
+Project 4 - Part 6 / 9
+Video: Chapter 5 Part 3
+ 
+Create a branch named Part6
+ 
+ Lambdas
+ 
+    Do not delete your previous main. you will be adding to it.
 
     Build/Run often with this task to make sure you're not breaking the code with each step.
     I recommend committing after you get each step working so you can revert to a working version easily if needed.
  
- 1) replace the add/subtract/multiply/etc functions with overloaded math operators 
-        e.g. add() would become operator+=() because it modifies the internal heap-allocated object.
+ 1) add two member functions named "apply()" to each of your Heap-Allocated Numeric Type wrappers.
+         both apply() functions should work with chaining
  
- 2) Your overloaded operators should only take primitives, passed by value.
+ 2) One of the apply() functions should takes a std::function<> object as the function argument.
+    the std::function<> object should return *this;
  
- 3) don't delete your conversion functions.
-         if you removed them in Chapter 4 Part 7, put them back in.
-         uncomment them if you commented them in Chapter 4 Part 7
+ 3) the other apply() function should take a function pointer. 
+    the function pointer should return void.
  
- 4) your main() function should be the same as Chapter 4 Part 7.  
-     
- 5) if your Chapter4 Part7 task didn't use any [+ - * or /], 
-         add some in and fix the build errors that might result via the techniques you have learned in the previous weeks (hint: casting)
-         i.e.
- */
-#if false
-namespace Example
-{
-    int main()
-    {
-        FloatType floatNum(4.3f);
-        IntType intNum(2);
-        IntType intNum2(6);
+ 4) Make both of the member functions's Callable Function Parameter use your owned object as it's single parameter.
+         e.g. if you manage your owned object via std::unique_ptr<T>, you'd use this for your std::function argument:
+             std::function< OwnedT&(std::unique_ptr<T>&)>
+             
+         if you managed your owned object via a raw pointer, you'd use this for your std::function argument:
+             std::function<OwnedT&(T&)>    
+ 
+ 5) call that Callable Function Parameter in the apply() member function.
+         be sure to practice safe std::function usage (make sure it's not a nullptr function being called)
+ 
+ 6) Using one instance of each of your Heap-Allocated Numeric Type wrappers: Call your apply() member function twice in main()
+         a) once with a lambda as the argument
+         b) once with a free function as the argument.
+         c) there will be a total of 6 calls to apply() in main(), 2x per HeapType, IntType, DoubleType instance.
+         If this confuses you, rewatch the video where I pass a free function in to a function that wants a function pointer
+ 
+ 8) Make your lambda & free function update the value of your held object
+ 
+ 9) use std::cout statements to print out the results of calling apply()
+ 
+build/run to make sure you don't have any errors
 
-        /* 
-        if you previously had a line like this demonstrating chaining:
-            
-            intNum.add(3).add(4.5f).divide(floatNum); 
-
-        it should become:
-        */
-        intNum += 3;
-        intNum += 4.5f;
-        intNum /= floatNum;
-        std::cout << "intNum: " << intNum << std::endl;
-        
-        return 0;
-    }
-}
-#endif
- /*
- 6) compile/link/run to make sure you don't have any errors
- 
- Commit your changes by clicking on the Source Control panel on the left, entering a message, and click [Commit and push].
- 
 Make a pull request after you make your first commit and pin the pull request link to our DM thread.
 
 send me a DM to check your pull request
 
  Wait for my code review.
+ 
+ If you need to see an example, look at https://bitbucket.org/MatkatMusic/pfmcpptasks/src/master/Projects/Project4/Part6Example.cpp
  */
+
+
 
 
 
