@@ -133,12 +133,6 @@ struct FloatType
 
         FloatType& operator/=( const float y )
         {
-            if( y == 0.f )
-            {
-                std::cout << "Can't divide by 0! Cancelling divide operation."  << std::endl;       
-                return *this;
-            }
-    
             *heapFloat /= y;
             return *this;
         }
@@ -187,12 +181,6 @@ struct DoubleType
 
         DoubleType& operator/=( const double y )
         {
-            if( y == 0.0 )
-            {
-                std::cout << "Can't divide by 0! Cancelling divide operation."  << std::endl;       
-                return *this;
-            }
-    
             *heapDub /= y;
             return *this;
         }
