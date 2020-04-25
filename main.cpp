@@ -103,6 +103,8 @@ struct FloatType
 {
     public:
         FloatType( float f ) : heapFloat( new float(f) ) {}
+        FloatType() : FloatType(0) {}
+
         ~FloatType()
         {
             delete heapFloat;
@@ -110,11 +112,30 @@ struct FloatType
         }
 
         operator float() const { return *heapFloat; }
-    
-        FloatType& add( float operand );
-        FloatType& subtract( float operand );
-        FloatType& multiply( float operand );
-        FloatType& divide( float operand );
+
+        FloatType& operator+=( const float y )
+        {
+            *heapFloat += y;
+            return *this;
+        }
+
+        FloatType& operator-=( const float y )
+        {
+            *heapFloat -= y;
+            return *this;
+        }
+
+        FloatType& operator*=( const float y )
+        {
+            *heapFloat *= y;
+            return *this;
+        }
+
+        FloatType& operator/=( const float y )
+        {
+            *heapFloat /= y;
+            return *this;
+        }
 
         FloatType& pow( const FloatType& operand );
         FloatType& pow( const DoubleType& operand );
@@ -139,12 +160,31 @@ struct DoubleType
         }
 
         operator double() const { return *heapDub; }
-    
-        DoubleType& add( double operand );
-        DoubleType& subtract( double operand );
-        DoubleType& multiply( double operand );
-        DoubleType& divide( double operand );
 
+        DoubleType& operator+=( const double y )
+        {
+            *heapDub += y;
+            return *this;
+        }
+
+        DoubleType& operator-=( const double y )
+        {
+            *heapDub -= y;
+            return *this;
+        }
+
+        DoubleType& operator*=( const double y )
+        {
+            *heapDub *= y;
+            return *this;
+        }
+
+        DoubleType& operator/=( const double y )
+        {
+            *heapDub /= y;
+            return *this;
+        }
+    
         DoubleType& pow( const FloatType& operand );
         DoubleType& pow( const DoubleType& operand );
         DoubleType& pow( const IntType& operand );
@@ -169,10 +209,35 @@ struct IntType
 
         operator int() const { return *heapInt; }
 
-        IntType& add( int operand );
-        IntType& subtract( int operand );
-        IntType& multiply( int operand );  
-        IntType& divide( int operand );
+        IntType& operator+=( const int y )
+        {
+            *heapInt += y;
+            return *this;
+        }
+
+        IntType& operator-=( const int y )
+        {
+            *heapInt -= y;
+            return *this;
+        }
+
+        IntType& operator*=( const int y )
+        {
+            *heapInt *= y;
+            return *this;
+        }
+
+        IntType& operator/=( const int y )
+        {
+            if( y == 0 )
+            {
+                std::cout << "Can't divide by 0! Cancelling divide operation."  << std::endl;       
+                return *this;
+            }
+    
+            *heapInt /= y;
+            return *this;
+        }
 
         IntType& pow( const FloatType& operand );
         IntType& pow( const DoubleType& operand );
@@ -183,6 +248,9 @@ struct IntType
         int* heapInt = nullptr;
         IntType& powInternal( int x );
 };
+
+//float type operators
+
 
 //point constructor implementations
 Point::Point(FloatType& a, FloatType& b) : Point(static_cast<float>(a), static_cast<float>(b) ) { } 
@@ -308,87 +376,6 @@ IntType& IntType::powInternal( int x )
     return *this;
 }
 
-// float member functions 
-FloatType& FloatType::add( float operand )
-{
-    *heapFloat += operand;
-    return *this;
-}
-
-FloatType& FloatType::subtract( float operand )
-{
-    *heapFloat -= operand;
-    return *this;
-}
-
-FloatType& FloatType::multiply( float operand )
-{
-    *heapFloat *= operand;
-    return *this;
-}
-
-FloatType& FloatType::divide( float operand )
-{
-    *heapFloat /= operand;
-    return *this;
-}
-
-// double member functions
-DoubleType& DoubleType::add( double operand )
-{
-    *heapDub += operand;
-    return *this;
-}
-
-DoubleType& DoubleType::subtract( double operand )
-{
-    *heapDub -= operand;
-    return *this;
-}
-
-DoubleType& DoubleType::multiply( double operand )
-{
-    *heapDub *= operand;
-    return *this;
-}
-
-DoubleType& DoubleType::divide( double operand )
-{
-    *heapDub /= operand;
-    return *this;
-}
-
-// int member functions
-IntType& IntType::add( int operand )
-{
-    *heapInt += operand;
-    return *this;
-}
-
-IntType& IntType::subtract( int operand )
-{
-    *heapInt -= operand;
-    return *this;
-}
-
-IntType& IntType::multiply( int operand )
-{
-    *heapInt *= operand;
-    return *this;
-}
-
-#include <iostream>
-IntType& IntType::divide( int operand )
-{
-    if( operand == 0 )
-    {
-        std::cout << "Can't divide by 0! Cancelling divide operation."  << std::endl;       
-        return *this;
-    }
-    
-    *heapInt /= operand;
-    return *this;
-}
 
 int main()
 {
@@ -398,6 +385,7 @@ int main()
     IntType it ( 34 );
     DoubleType pi( 3.14 );
 
+/*
     std::cout << "The result of FloatType^4 divided by IntType is: " << ft.multiply( ft ).multiply( ft ).divide( it ) << std::endl;
     std::cout << "The result of DoubleType times 3 plus IntType is : " << dt.multiply( 3 ).add( it ) << std::endl;
     std::cout << "The result of IntType divided by 3.14 multiplied by DoubleType minus FloatType is: " << it.divide( static_cast<int>(pi) ).multiply( static_cast<int>(dt) ).subtract( static_cast<int>(ft) ) << std::endl;
@@ -409,6 +397,7 @@ int main()
     
     std::cout << std::endl;
     std::cout << std::endl;
+    */
 
     FloatType powFloat( 2.4f );
     DoubleType powDub( 12.25 );
@@ -417,6 +406,16 @@ int main()
     double b = 1.89;
     int c = 5;
 
+    std::cout << "New tests added for Project 4 Part 5 (Operator Overloading):" << std::endl;
+    std::cout << powFloat << " + " << b << " = " << (powFloat += static_cast<float>(b)) << std::endl;
+    std::cout << powFloat << " * " << it << " = " << (powFloat *= static_cast<float>(it)) << std::endl;
+    std::cout << dt << " * " << powDub << " = " << (dt *= powDub) << std::endl;
+    std::cout << dt << " / " << powFloat << " = " << (dt /= static_cast<double>(powFloat)) << std::endl;
+    std::cout << powInt << " - " << ft << " = " << (powInt -= static_cast<int>(ft)) << std::endl;
+    std::cout << powDub << " * " << c << " = " << (powDub *= static_cast<double>(c)) << std::endl;
+
+    std::cout << std::endl;
+
     std::cout << "Pow functions test: " << std::endl;
     std::cout << powFloat << " ^ " << a << " = " <<  powFloat.pow(a) << std::endl;
     std::cout << powDub << " ^ " << b << " = " << powDub.pow(b) << std::endl;
@@ -424,15 +423,15 @@ int main()
     
     std::cout << std::endl;
     std::cout << "Resetting UDT's for Test 2..." << std::endl;
-    powFloat.pow(1/a);
-    powDub.pow(1/b);
-    powInt.divide(16);
+    powFloat.pow(1.f / a);
+    powDub.pow(1.0 / b);
+    powInt /= 16; // changed value reset from divide function to operator
     std::cout << std::endl;
     
     std::cout << "Test 2, one UDT ^ another UDT: " << std::endl;
     std::cout << powFloat << " ^ " << powInt << " = " <<  powFloat.pow(powInt) << std::endl;
     std::cout << powDub << " ^ " << powFloat << " = " << powDub.pow(powFloat) << std::endl;
-    std::cout << powInt << " ^ "<< powFloat << " = " << powInt.pow(powFloat) << std::endl;   
+    std::cout << powInt << " ^ "<< powFloat << " = " << powInt.pow(powFloat) << std::endl;
 
     FloatType xFloat( 1.3f );
     FloatType yFloat( 2.9f );
@@ -441,7 +440,6 @@ int main()
     IntType xInt( 4 );
     IntType yInt( -2 );
 
-    std::cout << std::endl;
     std::cout << std::endl;
 
     Point pFloat( xFloat, yFloat);
@@ -464,6 +462,8 @@ int main()
     pDouble.multiply(-1.4f).toString();
     std::cout << "pInt x .75f = ";
     pInt.multiply(.75f).toString();
+    
+    
 
     std::cout << "good to go!" << std::endl;
 }
