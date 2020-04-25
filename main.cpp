@@ -133,16 +133,15 @@ struct FloatType
 
         FloatType& operator/=( const float y )
         {
+            if( y == 0.f )
+            {
+                std::cout << "Can't divide by 0! Cancelling divide operation."  << std::endl;       
+                return *this;
+            }
+    
             *heapFloat /= y;
             return *this;
         }
-
-        /*
-        FloatType& add( int operand );
-        FloatType& subtract( int operand );
-        FloatType& multiply( int operand );  
-        FloatType& divide( int operand );
-        */
 
         FloatType& pow( const FloatType& operand );
         FloatType& pow( const DoubleType& operand );
@@ -188,16 +187,15 @@ struct DoubleType
 
         DoubleType& operator/=( const double y )
         {
+            if( y == 0.0 )
+            {
+                std::cout << "Can't divide by 0! Cancelling divide operation."  << std::endl;       
+                return *this;
+            }
+    
             *heapDub /= y;
             return *this;
         }
-
-        /*
-        DoubleType& add( int operand );
-        DoubleType& subtract( int operand );
-        DoubleType& multiply( int operand );  
-        DoubleType& divide( int operand );
-        */
     
         DoubleType& pow( const FloatType& operand );
         DoubleType& pow( const DoubleType& operand );
@@ -243,16 +241,15 @@ struct IntType
 
         IntType& operator/=( const int y )
         {
+            if( y == 0 )
+            {
+                std::cout << "Can't divide by 0! Cancelling divide operation."  << std::endl;       
+                return *this;
+            }
+    
             *heapInt /= y;
             return *this;
         }
-
-        /*
-        IntType& add( int operand );
-        IntType& subtract( int operand );
-        IntType& multiply( int operand );  
-        IntType& divide( int operand );
-        */
 
         IntType& pow( const FloatType& operand );
         IntType& pow( const DoubleType& operand );
@@ -391,89 +388,6 @@ IntType& IntType::powInternal( int x )
     return *this;
 }
 
-/*
-// float member functions 
-FloatType& FloatType::add( float operand )
-{
-    *heapFloat += operand;
-    return *this;
-}
-
-FloatType& FloatType::subtract( float operand )
-{
-    *heapFloat -= operand;
-    return *this;
-}
-
-FloatType& FloatType::multiply( float operand )
-{
-    *heapFloat *= operand;
-    return *this;
-}
-
-FloatType& FloatType::divide( float operand )
-{
-    *heapFloat /= operand;
-    return *this;
-}
-
-// double member functions
-DoubleType& DoubleType::add( double operand )
-{
-    *heapDub += operand;
-    return *this;
-}
-
-DoubleType& DoubleType::subtract( double operand )
-{
-    *heapDub -= operand;
-    return *this;
-}
-
-DoubleType& DoubleType::multiply( double operand )
-{
-    *heapDub *= operand;
-    return *this;
-}
-
-DoubleType& DoubleType::divide( double operand )
-{
-    *heapDub /= operand;
-    return *this;
-}
-
-// int member functions
-IntType& IntType::add( int operand )
-{
-    *heapInt += operand;
-    return *this;
-}
-
-IntType& IntType::subtract( int operand )
-{
-    *heapInt -= operand;
-    return *this;
-}
-
-IntType& IntType::multiply( int operand )
-{
-    *heapInt *= operand;
-    return *this;
-}
-
-#include <iostream>
-IntType& IntType::divide( int operand )
-{
-    if( operand == 0 )
-    {
-        std::cout << "Can't divide by 0! Cancelling divide operation."  << std::endl;       
-        return *this;
-    }
-    
-    *heapInt /= operand;
-    return *this;
-}
-*/
 
 int main()
 {
