@@ -407,12 +407,12 @@ int main()
     int c = 5;
 
     std::cout << "New tests added for Project 4 Part 5 (Operator Overloading):" << std::endl;
-    std::cout << powFloat << " + " << b << " = " << (powFloat+=static_cast<float>(b)) << std::endl;
-    std::cout << powFloat << " * " << it << " = " << (powFloat*=static_cast<float>(it)) << std::endl;
-    std::cout << dt << " * " << powDub << " = " << (dt*=powDub) << std::endl;
-    std::cout << dt << " / " << powFloat << " = " << (dt/=static_cast<double>(powFloat)) << std::endl;
-    std::cout << powInt << " - " << ft << " = " << (powInt-=static_cast<int>(ft)) << std::endl;
-    std::cout << powDub << " * " << c << " = " << (powDub*=static_cast<double>(c)) << std::endl;
+    std::cout << powFloat << " + " << b << " = " << (powFloat += static_cast<float>(b)) << std::endl;
+    std::cout << powFloat << " * " << it << " = " << (powFloat *= static_cast<float>(it)) << std::endl;
+    std::cout << dt << " * " << powDub << " = " << (dt *= powDub) << std::endl;
+    std::cout << dt << " / " << powFloat << " = " << (dt /= static_cast<double>(powFloat)) << std::endl;
+    std::cout << powInt << " - " << ft << " = " << (powInt -= static_cast<int>(ft)) << std::endl;
+    std::cout << powDub << " * " << c << " = " << (powDub *= static_cast<double>(c)) << std::endl;
 
     std::cout << std::endl;
 
@@ -423,9 +423,9 @@ int main()
     
     std::cout << std::endl;
     std::cout << "Resetting UDT's for Test 2..." << std::endl;
-    powFloat.pow(1/a);
-    powDub.pow(1/b);
-    powInt/=16; // changed value reset from divide function to operator
+    powFloat.pow(1.f / a);
+    powDub.pow(1.0 / b);
+    powInt /= 16; // changed value reset from divide function to operator
     std::cout << std::endl;
     
     std::cout << "Test 2, one UDT ^ another UDT: " << std::endl;
