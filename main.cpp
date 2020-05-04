@@ -132,8 +132,8 @@ struct FloatType
         FloatType& pow( const IntType& operand );
         FloatType& pow( float operand );
 
-        FloatType& apply(std::function<FloatType&(FloatType&)>){ return *this; }
-        void apply( void(*funcPtr)(FloatType&)){}
+        FloatType& apply(std::function<FloatType&(FloatType& t)>){ return *this; }
+        void apply( void(*funcPtr)(FloatType& t)){}
 
     private:
         float* heapFloat = nullptr; 
@@ -183,8 +183,8 @@ struct DoubleType
         DoubleType& pow( const IntType& operand );
         DoubleType& pow( double operand );
     
-        DoubleType& apply(std::function<DoubleType&(DoubleType&)>){ return *this; }
-        void apply( void(*funcPtr)(DoubleType&)){}
+        DoubleType& apply(std::function<DoubleType&(DoubleType& t)>){ return *this; }
+        void apply( void(*funcPtr)(DoubleType& t)){}
 
     private:
         double* heapDub = nullptr;
@@ -241,8 +241,8 @@ struct IntType
         IntType& pow( const IntType& operand );
         IntType& pow( int operand );
 
-        IntType& apply(std::function<IntType&(IntType&)>){ return *this; }
-        void apply( void(*funcPtr)(IntType&)){}
+        IntType& apply(std::function<IntType&(IntType& t)>){ return *this; }
+        void apply( void(*funcPtr)(IntType& t)){}
 
     
     private:
