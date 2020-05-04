@@ -57,6 +57,7 @@ send me a DM to check your pull request
 
 
 #include <cmath>
+#include <functional>
 
 struct FloatType;
 struct IntType;
@@ -131,6 +132,9 @@ struct FloatType
         FloatType& pow( const IntType& operand );
         FloatType& pow( float operand );
 
+        FloatType& apply(std::function<FloatType&()>){ return *this; }
+        void apply( void(*funcPtr)()){}
+
     private:
         float* heapFloat = nullptr; 
         FloatType& powInternal( float x );
@@ -178,6 +182,9 @@ struct DoubleType
         DoubleType& pow( const DoubleType& operand );
         DoubleType& pow( const IntType& operand );
         DoubleType& pow( double operand );
+    
+        DoubleType& apply(std::function<DoubleType&()>){ return *this; }
+        void apply( void(*funcPtr)()){}
 
     private:
         double* heapDub = nullptr;
@@ -186,6 +193,7 @@ struct DoubleType
 };
 
 // int UDT
+#include <iostream>
 struct IntType
 {
     public:
@@ -232,6 +240,10 @@ struct IntType
         IntType& pow( const DoubleType& operand );
         IntType& pow( const IntType& operand );
         IntType& pow( int operand );
+
+        IntType& apply(std::function<IntType&()>){ return *this; }
+        void apply( void(*funcPtr)()){}
+
     
     private:
         int* heapInt = nullptr;
