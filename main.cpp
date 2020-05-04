@@ -132,7 +132,7 @@ struct FloatType
         FloatType& pow( const IntType& operand );
         FloatType& pow( float operand );
 
-        FloatType& apply(std::function<FloatType&()>){ return *this; }
+        FloatType& apply(std::function<FloatType&(FloatType&)>){ return *this; }
         void apply( void(*funcPtr)()){}
 
     private:
