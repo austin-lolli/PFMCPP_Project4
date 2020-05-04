@@ -132,8 +132,24 @@ struct FloatType
         FloatType& pow( const IntType& operand );
         FloatType& pow( float operand );
 
-        FloatType& apply(std::function<FloatType&(FloatType& t)>){ return *this; }
-        void apply( void(*funcPtr)(FloatType& t)){}
+        FloatType& apply(std::function<FloatType&(FloatType& t)> callable)
+        {
+            if(callable)
+            {
+                return callable(*this); 
+            }
+            else
+            {
+                return *this;
+            }
+        }
+        void apply( void(*funcPtr)(FloatType& t))
+        {
+            if(funcPtr)
+            {
+                funcPtr(*this);
+            }
+        }
 
     private:
         float* heapFloat = nullptr; 
@@ -183,8 +199,24 @@ struct DoubleType
         DoubleType& pow( const IntType& operand );
         DoubleType& pow( double operand );
     
-        DoubleType& apply(std::function<DoubleType&(DoubleType& t)>){ return *this; }
-        void apply( void(*funcPtr)(DoubleType& t)){}
+        DoubleType& apply(std::function<DoubleType&(DoubleType& t)> callable)
+        {
+            if(callable)
+            {
+                return callable(*this); 
+            }
+            else
+            {
+                return *this;
+            }
+        }
+        void apply( void(*funcPtr)(DoubleType& t))
+        {
+            if(funcPtr)
+            {
+                funcPtr(*this);    
+            }
+        }
 
     private:
         double* heapDub = nullptr;
@@ -241,8 +273,24 @@ struct IntType
         IntType& pow( const IntType& operand );
         IntType& pow( int operand );
 
-        IntType& apply(std::function<IntType&(IntType& t)>){ return *this; }
-        void apply( void(*funcPtr)(IntType& t)){}
+        IntType& apply(std::function<IntType&(IntType& t)> callable)
+        {
+            if(callable)
+            {
+                return callable(*this); 
+            }
+            else
+            {
+                return *this;
+            }
+        }
+        void apply( void(*funcPtr)(IntType& t))
+        {
+            if(funcPtr)
+            {
+                funcPtr(*this);
+            }
+        }
 
     
     private:
