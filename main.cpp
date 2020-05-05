@@ -51,11 +51,6 @@ send me a DM to check your pull request
  If you need to see an example, look at https://bitbucket.org/MatkatMusic/pfmcpptasks/src/master/Projects/Project4/Part6Example.cpp
  */
 
-
-
-
-
-
 #include <cmath>
 #include <functional>
 
@@ -433,12 +428,12 @@ IntType& IntType::powInternal( int x )
 }
 
 // functions to pass to apply
-void tripleFlt(int &heapFloat)
+void tripleFlt(float &heapFloat)
 {
     heapFloat *= 3.f;
 }
 
-void tripleDub(int &heapDouble)
+void tripleDub(double &heapDouble)
 {
     heapDouble *= 3.0;
 }
@@ -536,9 +531,6 @@ int main()
 
 */
     std::cout << "Float Type Initial Valule: " << ft << std::endl;
-    std::cout << "Double Type Initial Valule: " << dt << std::endl;
-    std::cout << "Int Type Initial Valule: " << it << "\n"<< std::endl;
-
 
     ft.apply( [&ft](float& heapFloat) -> FloatType&
     {
@@ -547,9 +539,27 @@ int main()
     });
 
     std::cout << "Float Type + 2 using Lambda: " << ft << std::endl;
-    //std::cout << "Float Type x 3 using Function Pointer: " << ft.apply(tripleFlt) << std::endl;
+    std::cout << "Float Type x 3 using Function Pointer: " << ft.apply(tripleFlt) << "\n" << std::endl;   
+    std::cout << "Double Type Initial Valule: " << dt << std::endl;
 
-    //ft.apply(tripleFlt);
+    dt.apply( [&dt](double& heapDub) -> DoubleType&
+    {
+        heapDub += 2.0;
+        return dt;
+    });
 
+    std::cout << "Double Type + 2 using Lambda: " << dt << std::endl;
+    std::cout << "Double Type x 3 using Function Pointer: " << dt.apply(tripleDub) << "\n" << std::endl;
+    std::cout << "Int Type Initial Valule: " << it << "\n"<< std::endl;
+
+    it.apply( [&it](int& heapInt) -> IntType&
+    {
+        heapInt += 2;
+        return it;
+    });
+
+    std::cout << "Int Type + 2 using Lambda: " << it << std::endl;
+    std::cout << "Int Type x 3 using Function Pointer: " << it.apply(tripleInt) << "\n" << std::endl;
+    
     std::cout << "good to go!" << std::endl;
 }
