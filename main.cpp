@@ -132,23 +132,25 @@ struct FloatType
         FloatType& pow( const IntType& operand );
         FloatType& pow( float operand );
 
-        FloatType& apply(std::function<FloatType&(FloatType& t)> callable)
+        FloatType& apply(std::function<FloatType&(float&)> callable)
         {
             if(callable)
             {
-                return callable(*this); 
+                return callable(*heapFloat); 
             }
             else
             {
                 return *this;
             }
         }
-        void apply( void(*funcPtr)(FloatType& t))
+        FloatType& apply( void(*funcPtr)(float&))
         {
             if(funcPtr)
             {
-                funcPtr(*this);
+                funcPtr(*heapFloat);
             }
+
+            return *this;
         }
 
     private:
@@ -199,23 +201,25 @@ struct DoubleType
         DoubleType& pow( const IntType& operand );
         DoubleType& pow( double operand );
     
-        DoubleType& apply(std::function<DoubleType&(DoubleType& t)> callable)
+        DoubleType& apply(std::function<DoubleType&(double&)> callable)
         {
             if(callable)
             {
-                return callable(*this); 
+                return callable(*heapDub); 
             }
             else
             {
                 return *this;
             }
         }
-        void apply( void(*funcPtr)(DoubleType& t))
+        DoubleType& apply( void(*funcPtr)(double&))
         {
             if(funcPtr)
             {
-                funcPtr(*this);    
+                funcPtr(*heapDub);    
             }
+
+            return *this;
         }
 
     private:
@@ -273,23 +277,26 @@ struct IntType
         IntType& pow( const IntType& operand );
         IntType& pow( int operand );
 
-        IntType& apply(std::function<IntType&(IntType& t)> callable)
+        IntType& apply(std::function<IntType&(int&)> callable)
         {
             if(callable)
             {
-                return callable(*this); 
+                return callable(*heapInt); 
             }
             else
             {
                 return *this;
             }
         }
-        void apply( void(*funcPtr)(IntType& t))
+
+        IntType& apply( void(*funcPtr)(int&))
         {
             if(funcPtr)
             {
-                funcPtr(*this);
+                funcPtr(*heapInt);    
             }
+
+            return *this;
         }
 
     
@@ -425,6 +432,21 @@ IntType& IntType::powInternal( int x )
     return *this;
 }
 
+// functions to pass to apply
+void tripleFlt(int &heapFloat)
+{
+    heapFloat *= 3.f;
+}
+
+void tripleDub(int &heapDouble)
+{
+    heapDouble *= 3.0;
+}
+
+void tripleInt(int &heapInt)
+{
+    heapInt *= 3;
+}
 
 int main()
 {
@@ -446,7 +468,7 @@ int main()
     
     std::cout << std::endl;
     std::cout << std::endl;
-    */
+
 
     FloatType powFloat( 2.4f );
     DoubleType powDub( 12.25 );
@@ -511,8 +533,23 @@ int main()
     pDouble.multiply(-1.4f).toString();
     std::cout << "pInt x .75f = ";
     pInt.multiply(.75f).toString();
-    
-    
+
+*/
+    std::cout << "Float Type Initial Valule: " << ft << std::endl;
+    std::cout << "Double Type Initial Valule: " << dt << std::endl;
+    std::cout << "Int Type Initial Valule: " << it << "\n"<< std::endl;
+
+
+    ft.apply( [&ft](float& heapFloat) -> FloatType&
+    {
+        heapFloat += 2.f;
+        return ft;
+    });
+
+    std::cout << "Float Type + 2 using Lambda: " << ft << std::endl;
+    //std::cout << "Float Type x 3 using Function Pointer: " << ft.apply(tripleFlt) << std::endl;
+
+    //ft.apply(tripleFlt);
 
     std::cout << "good to go!" << std::endl;
 }
