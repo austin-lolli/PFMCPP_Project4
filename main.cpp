@@ -550,7 +550,7 @@ int main()
 
     std::cout << "Double Type + 2 using Lambda: " << dt << std::endl;
     std::cout << "Double Type x 3 using Function Pointer: " << dt.apply(tripleDub) << "\n" << std::endl;
-    std::cout << "Int Type Initial Valule: " << it << "\n"<< std::endl;
+    std::cout << "Int Type Initial Valule: " << it << std::endl;
 
     it.apply( [&it](int& heapInt) -> IntType&
     {
@@ -560,6 +560,6 @@ int main()
 
     std::cout << "Int Type + 2 using Lambda: " << it << std::endl;
     std::cout << "Int Type x 3 using Function Pointer: " << it.apply(tripleInt) << "\n" << std::endl;
-    
+
     std::cout << "good to go!" << std::endl;
 }
