@@ -133,10 +133,8 @@ struct FloatType
             {
                 return callable(*heapFloat); 
             }
-            else
-            {
-                return *this;
-            }
+
+            return *this;
         }
         FloatType& apply( void(*funcPtr)(float&))
         {
@@ -202,10 +200,8 @@ struct DoubleType
             {
                 return callable(*heapDub); 
             }
-            else
-            {
-                return *this;
-            }
+
+            return *this;
         }
         DoubleType& apply( void(*funcPtr)(double&))
         {
@@ -278,10 +274,8 @@ struct IntType
             {
                 return callable(*heapInt); 
             }
-            else
-            {
-                return *this;
-            }
+            
+            return *this;
         }
 
         IntType& apply( void(*funcPtr)(int&))
@@ -464,7 +458,7 @@ int main()
     std::cout << std::endl;
     std::cout << std::endl;
 
-
+ */
     FloatType powFloat( 2.4f );
     DoubleType powDub( 12.25 );
     IntType powInt( 2 );
@@ -529,7 +523,9 @@ int main()
     std::cout << "pInt x .75f = ";
     pInt.multiply(.75f).toString();
 
-*/
+    std::cout << std::endl;
+    std::cout << std::endl;
+
     std::cout << "Float Type Initial Valule: " << ft << std::endl;
 
     ft.apply( [&ft](float& heapFloat) -> FloatType&
