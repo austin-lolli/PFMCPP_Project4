@@ -51,12 +51,8 @@ send me a DM to check your pull request
  If you need to see an example, look at https://bitbucket.org/MatkatMusic/pfmcpptasks/src/master/Projects/Project4/Part6Example.cpp
  */
 
-
-
-
-
-
 #include <cmath>
+#include <functional>
 
 struct FloatType;
 struct IntType;
@@ -131,6 +127,25 @@ struct FloatType
         FloatType& pow( const IntType& operand );
         FloatType& pow( float operand );
 
+        FloatType& apply(std::function<FloatType&(float&)> callable)
+        {
+            if(callable)
+            {
+                return callable(*heapFloat); 
+            }
+
+            return *this;
+        }
+        FloatType& apply( void(*funcPtr)(float&))
+        {
+            if(funcPtr)
+            {
+                funcPtr(*heapFloat);
+            }
+
+            return *this;
+        }
+
     private:
         float* heapFloat = nullptr; 
         FloatType& powInternal( float x );
@@ -178,6 +193,25 @@ struct DoubleType
         DoubleType& pow( const DoubleType& operand );
         DoubleType& pow( const IntType& operand );
         DoubleType& pow( double operand );
+    
+        DoubleType& apply(std::function<DoubleType&(double&)> callable)
+        {
+            if(callable)
+            {
+                return callable(*heapDub); 
+            }
+
+            return *this;
+        }
+        DoubleType& apply( void(*funcPtr)(double&))
+        {
+            if(funcPtr)
+            {
+                funcPtr(*heapDub);    
+            }
+
+            return *this;
+        }
 
     private:
         double* heapDub = nullptr;
@@ -186,6 +220,7 @@ struct DoubleType
 };
 
 // int UDT
+#include <iostream>
 struct IntType
 {
     public:
@@ -232,6 +267,27 @@ struct IntType
         IntType& pow( const DoubleType& operand );
         IntType& pow( const IntType& operand );
         IntType& pow( int operand );
+
+        IntType& apply(std::function<IntType&(int&)> callable)
+        {
+            if(callable)
+            {
+                return callable(*heapInt); 
+            }
+            
+            return *this;
+        }
+
+        IntType& apply( void(*funcPtr)(int&))
+        {
+            if(funcPtr)
+            {
+                funcPtr(*heapInt);    
+            }
+
+            return *this;
+        }
+
     
     private:
         int* heapInt = nullptr;
@@ -365,6 +421,21 @@ IntType& IntType::powInternal( int x )
     return *this;
 }
 
+// functions to pass to apply
+void tripleFlt(float &heapFloat)
+{
+    heapFloat *= 3.f;
+}
+
+void tripleDub(double &heapDouble)
+{
+    heapDouble *= 3.0;
+}
+
+void tripleInt(int &heapInt)
+{
+    heapInt *= 3;
+}
 
 int main()
 {
@@ -386,8 +457,8 @@ int main()
     
     std::cout << std::endl;
     std::cout << std::endl;
-    */
 
+ */
     FloatType powFloat( 2.4f );
     DoubleType powDub( 12.25 );
     IntType powInt( 2 );
@@ -451,8 +522,40 @@ int main()
     pDouble.multiply(-1.4f).toString();
     std::cout << "pInt x .75f = ";
     pInt.multiply(.75f).toString();
-    
-    
+
+    std::cout << std::endl;
+    std::cout << std::endl;
+
+    std::cout << "Float Type Initial Valule: " << ft << std::endl;
+
+    ft.apply( [&ft](float& heapFloat) -> FloatType&
+    {
+        heapFloat += 2.f;
+        return ft;
+    });
+
+    std::cout << "Float Type + 2 using Lambda: " << ft << std::endl;
+    std::cout << "Float Type x 3 using Function Pointer: " << ft.apply(tripleFlt) << "\n" << std::endl;   
+    std::cout << "Double Type Initial Valule: " << dt << std::endl;
+
+    dt.apply( [&dt](double& heapDub) -> DoubleType&
+    {
+        heapDub += 2.0;
+        return dt;
+    });
+
+    std::cout << "Double Type + 2 using Lambda: " << dt << std::endl;
+    std::cout << "Double Type x 3 using Function Pointer: " << dt.apply(tripleDub) << "\n" << std::endl;
+    std::cout << "Int Type Initial Valule: " << it << std::endl;
+
+    it.apply( [&it](int& heapInt) -> IntType&
+    {
+        heapInt += 2;
+        return it;
+    });
+
+    std::cout << "Int Type + 2 using Lambda: " << it << std::endl;
+    std::cout << "Int Type x 3 using Function Pointer: " << it.apply(tripleInt) << "\n" << std::endl;
 
     std::cout << "good to go!" << std::endl;
 }
