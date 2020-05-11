@@ -76,6 +76,7 @@ If you need to view an example, see: https://bitbucket.org/MatkatMusic/pfmcpptas
 
 #include <cmath>
 #include <functional>
+#include <memory>
 
 struct FloatType;
 struct IntType;
@@ -115,7 +116,6 @@ struct FloatType
 
         ~FloatType()
         {
-            delete heapFloat;
             heapFloat = nullptr;
         }
 
@@ -170,7 +170,7 @@ struct FloatType
         }
 
     private:
-        float* heapFloat = nullptr; 
+        std::unique_ptr<float> heapFloat{ new float() };
         FloatType& powInternal( float x );
 
 };
@@ -182,7 +182,6 @@ struct DoubleType
         DoubleType( double d ) : heapDub( new double(d) ) {}
         ~DoubleType()
         {
-            delete heapDub;
             heapDub = nullptr;
         }
 
@@ -237,7 +236,7 @@ struct DoubleType
         }
 
     private:
-        double* heapDub = nullptr;
+        std::unique_ptr<double> heapDub{ new double() };
         DoubleType& powInternal( double x );
 
 };
@@ -250,7 +249,6 @@ struct IntType
         IntType( int i ) : heapInt( new int(i) ) {}
         ~IntType()
         {
-            delete heapInt;
             heapInt = nullptr;
         }
 
@@ -313,7 +311,7 @@ struct IntType
 
     
     private:
-        int* heapInt = nullptr;
+        std::unique_ptr<int> heapInt{ new int() };
         IntType& powInternal( int x );
 };
 
