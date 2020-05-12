@@ -77,6 +77,7 @@ If you need to view an example, see: https://bitbucket.org/MatkatMusic/pfmcpptas
 #include <cmath>
 #include <functional>
 #include <memory>
+#include <iostream>
 
 struct FloatType;
 struct IntType;
@@ -106,6 +107,55 @@ private:
     float x{0}, y{0};
 };
 
+template<typename ValueType>
+struct NumericType
+{
+    public:
+        NumericType( ValueType n ) : heapNumber( new ValueType(n) ) {}
+        NumericType() : NumericType(0) {}
+
+        ~NumericType()
+        {
+            heapNumber = nullptr;
+        }
+
+        operator NumericType() const { return *heapNumber; }
+
+        NumericType& operator+=( const ValueType y )
+        {
+            *heapNumber += y;
+            return *this;
+        }
+
+        NumericType& operator-=( const ValueType y )
+        {
+            *heapNumber -= y;
+            return *this;
+        }
+
+        NumericType& operator*=( const ValueType y )
+        {
+            *heapNumber *= y;
+            return *this;
+        }
+
+        NumericType& operator/=( const ValueType y )
+        {
+            if y == 0
+            {
+                std::cout << "Can't divide by 0! Cancelling operation." << std::endl;
+                return *this;
+            }
+
+            *heapNumber /= y;
+            return *this;
+        }
+
+
+    private:
+
+
+}
 
 // float UDT 
 struct FloatType
