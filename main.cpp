@@ -24,8 +24,8 @@ Templates and Containers
         treat this type declaration via 'using' as a static member variable
         use this Type alias as the argument everywhere you previously used the template argument.
         this will make it very easy to change the type if needed.
-            i.e. if you have 'std::unique_ptr<NumericType> value;' before
-                you'd replace NumericType in that variable declaration with '<some name>'
+            i.e. if you have 'std::unique_ptr<Numeric> value;' before
+                you'd replace Numeric in that variable declaration with '<some name>'
         
 #4) you'll need to pair it with decltype() to help the compiler figure out the type of the object 
     your class owns when you make your lambda and free function that takes your unique_ptr.  
@@ -108,39 +108,40 @@ private:
 };
 
 //template class
-template<typename ValueType>
-struct NumericType
+template<typename T>
+struct Numeric
 {
+    using ValueType = T;
     public:
-        NumericType( ValueType n ) : heapNumber( new ValueType(n) ) {}
-        NumericType() : NumericType(0) {}
+        Numeric( ValueType n ) : heapNumber( new ValueType(n) ) {}
+        Numeric() : Numeric(0) {}
 
-        ~NumericType()
+        ~Numeric()
         {
             heapNumber = nullptr;
         }
 
-        operator NumericType() const { return *heapNumber; }
+        operator Numeric() const { return *heapNumber; }
 
-        NumericType& operator+=( const ValueType y )
+        Numeric& operator+=( const ValueType y )
         {
             *heapNumber += y;
             return *this;
         }
 
-        NumericType& operator-=( const ValueType y )
+        Numeric& operator-=( const ValueType y )
         {
             *heapNumber -= y;
             return *this;
         }
 
-        NumericType& operator*=( const ValueType y )
+        Numeric& operator*=( const ValueType y )
         {
             *heapNumber *= y;
             return *this;
         }
 
-        NumericType& operator/=( const ValueType y )
+        Numeric& operator/=( const ValueType y )
         {
             if( y == 0 ) 
             {
@@ -152,12 +153,12 @@ struct NumericType
             return *this;
         }
 
-        NumericType& pow( const FloatType& operand );
-        NumericType& pow( const DoubleType& operand );
-        NumericType& pow( const IntType& operand );
-        NumericType& pow( ValueType operand );
+        Numeric& pow( const FloatType& operand );
+        Numeric& pow( const DoubleType& operand );
+        Numeric& pow( const IntType& operand );
+        Numeric& pow( ValueType operand );
 
-        NumericType& apply(std::function<NumericType&(ValueType&)> callable)
+        Numeric& apply(std::function<Numeric&(ValueType&)> callable)
         {
             if(callable)
             {
@@ -167,7 +168,7 @@ struct NumericType
             return *this;
         }
 
-        NumericType& apply( void(*funcPtr)(ValueType&) )
+        Numeric& apply( void(*funcPtr)(ValueType&) )
         {
             if(funcPtr)
             {
@@ -179,7 +180,7 @@ struct NumericType
 
     private:
         std::unique_ptr<ValueType> heapNumber{ new ValueType() };
-        NumericType& powInternal( ValueType x );
+        Numeric& powInternal( ValueType x );
 
 };
 
