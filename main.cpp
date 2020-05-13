@@ -519,7 +519,7 @@ IntType& IntType::powInternal( int x )
     return *this;
 }
 
-// functions to pass to apply
+// free functions to pass to apply
 void tripleFlt(float &heapFloat)
 {
     heapFloat *= 3.f;
@@ -538,10 +538,10 @@ void tripleInt(int &heapInt)
 int main()
 {
     
-    FloatType ft( 5.5f );
-    DoubleType dt( 11.1 );
-    IntType it ( 34 );
-    DoubleType pi( 3.14 );
+    NumericType<float> ft( 5.5f );
+    NumericType<double> dt( 11.1 );
+    NumericType<int> it( 34 );
+    NumericType<double> pi( 3.14 );
 
 /*
     std::cout << "The result of FloatType^4 divided by IntType is: " << ft.multiply( ft ).multiply( ft ).divide( it ) << std::endl;
@@ -557,9 +557,9 @@ int main()
     std::cout << std::endl;
 
  */
-    FloatType powFloat( 2.4f );
-    DoubleType powDub( 12.25 );
-    IntType powInt( 2 );
+    NumericType<float> powFloat( 2.4f );
+    NumericType<double> powDub( 12.25 );
+    NumericType<int> powInt( 2 );
     float a = 2.5f;
     double b = 1.89;
     int c = 5;
@@ -624,6 +624,9 @@ int main()
     std::cout << std::endl;
     std::cout << std::endl;
 
+    using FloatType = decltype(ft);
+    using DoubleType = decltype(dt);
+    using IntType = decltype(it);
     std::cout << "Float Type Initial Valule: " << ft << std::endl;
 
     ft.apply( [&ft](float& heapFloat) -> FloatType&
