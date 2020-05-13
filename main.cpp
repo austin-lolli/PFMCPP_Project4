@@ -107,6 +107,7 @@ private:
     float x{0}, y{0};
 };
 
+//template class
 template<typename ValueType>
 struct NumericType
 {
@@ -141,7 +142,7 @@ struct NumericType
 
         NumericType& operator/=( const ValueType y )
         {
-            if y == 0
+            if( y == 0 ) 
             {
                 std::cout << "Can't divide by 0! Cancelling operation." << std::endl;
                 return *this;
@@ -151,11 +152,36 @@ struct NumericType
             return *this;
         }
 
+        NumericType& pow( const FloatType& operand );
+        NumericType& pow( const DoubleType& operand );
+        NumericType& pow( const IntType& operand );
+        NumericType& pow( ValueType operand );
+
+        NumericType& apply(std::function<NumericType&(ValueType&)> callable)
+        {
+            if(callable)
+            {
+                return callable(*heapNumber);
+            }
+
+            return *this;
+        }
+
+        NumericType& apply( void(*funcPtr)(ValueType&) )
+        {
+            if(funcPtr)
+            {
+                funcPtr(*heapNumber); 
+            }
+
+            return *this;
+        }
 
     private:
+        std::unique_ptr<ValueType> heapNumber{ new ValueType() };
+        NumericType& powInternal( ValueType x );
 
-
-}
+};
 
 // float UDT 
 struct FloatType
