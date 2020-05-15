@@ -160,6 +160,79 @@ struct Numeric
             return powInternal( operand );
         }
 
+        Numeric& apply( void(*funcPtr)(ValueType&) )
+        {
+            if(funcPtr)
+            {
+                funcPtr(*heapNumber); 
+            }
+
+            return *this;
+        }
+
+    private:
+        std::unique_ptr<ValueType> heapNumber{ new ValueType() };
+        Numeric& powInternal( ValueType x )
+        {
+            if( heapNumber != nullptr )
+            {
+                *heapNumber = static_cast<ValueType>( std::pow( *heapNumber, x ) );
+            }
+            return *this;
+        }
+
+};
+
+template<>
+struct Numeric<double>
+{
+    using ValueType = double;
+    public:
+        Numeric( ValueType n ) : heapNumber( new ValueType(n) ) {}
+        Numeric() : Numeric(0) {}
+
+        ~Numeric()
+        {
+            heapNumber = nullptr;
+        }
+
+        operator Numeric() const { return *heapNumber; }
+
+        Numeric& operator+=( const ValueType y )
+        {
+            *heapNumber += y;
+            return *this;
+        }
+
+        Numeric& operator-=( const ValueType y )
+        {
+            *heapNumber -= y;
+            return *this;
+        }
+
+        Numeric& operator*=( const ValueType y )
+        {
+            *heapNumber *= y;
+            return *this;
+        }
+
+        Numeric& operator/=( const ValueType y )
+        {
+            if( y == 0 ) 
+            {
+                std::cout << "Can't divide by 0! Cancelling operation." << std::endl;
+                return *this;
+            }
+
+            *heapNumber /= y;
+            return *this;
+        }
+
+        Numeric& pow( const Numeric operand )
+        {
+            return powInternal( operand );
+        }
+
         Numeric& apply(std::function<Numeric&(ValueType&)> callable)
         {
             if(callable)
@@ -190,8 +263,7 @@ struct Numeric
             }
             return *this;
         }
-
-};
+}
 
 
 // free functions to pass to apply
