@@ -121,7 +121,7 @@ struct Numeric
             heapNumber = nullptr;
         }
 
-        operator Numeric() const { return *heapNumber; }
+        operator ValueType() const { return *heapNumber; }
 
         Numeric& operator+=( const ValueType y )
         {
@@ -285,10 +285,10 @@ int main()
 
  */
  //temp commment out for testing 
- /*
-    NumericType<float> powFloat( 2.4f );
-    NumericType<double> powDub( 12.25 );
-    NumericType<int> powInt( 2 );
+
+    Numeric<float> powFloat( 2.4f );
+    Numeric<double> powDub( 12.25 );
+    Numeric<int> powInt( 2 );
     float a = 2.5f;
     double b = 1.89;
     int c = 5;
@@ -314,7 +314,7 @@ int main()
     powDub.pow(1.0 / b);
     powInt /= 16; // changed value reset from divide function to operator
     std::cout << std::endl;
-    
+  /*   
     std::cout << "Test 2, one UDT ^ another UDT: " << std::endl;
     std::cout << powFloat << " ^ " << powInt << " = " <<  powFloat.pow(powInt) << std::endl;
     std::cout << powDub << " ^ " << powFloat << " = " << powDub.pow(powFloat) << std::endl;
