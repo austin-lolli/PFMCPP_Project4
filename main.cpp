@@ -76,8 +76,6 @@ If you need to view an example, see: https://bitbucket.org/MatkatMusic/pfmcpptas
 #include <cmath>
 #include <functional>
 #include <memory>
-#include <iostream>
-
 
 struct Point
 {
@@ -196,7 +194,7 @@ struct Numeric<double>
             heapNumber = nullptr;
         }
 
-        operator Numeric() const { return *heapNumber; }
+        operator ValueType() const { return *heapNumber; }
 
         Numeric& operator+=( const ValueType y )
         {
@@ -218,7 +216,7 @@ struct Numeric<double>
 
         Numeric& operator/=( const ValueType y )
         {
-            if( y == 0 ) 
+            if( y == 0.0 ) 
             {
                 std::cout << "Can't divide by 0! Cancelling operation." << std::endl;
                 return *this;
@@ -233,23 +231,13 @@ struct Numeric<double>
             return powInternal( operand );
         }
 
-        Numeric& apply(std::function<Numeric&(ValueType&)> callable)
+        template<typename Callable>
+        auto apply(Callable callable) ->  Numeric&
         {
             if(callable)
             {
-                return callable(*heapNumber);
+                callable(*heapNumber);
             }
-
-            return *this;
-        }
-
-        Numeric& apply( void(*funcPtr)(ValueType&) )
-        {
-            if(funcPtr)
-            {
-                funcPtr(*heapNumber); 
-            }
-
             return *this;
         }
 
@@ -263,7 +251,7 @@ struct Numeric<double>
             }
             return *this;
         }
-}
+};
 
 
 // free functions to pass to apply
