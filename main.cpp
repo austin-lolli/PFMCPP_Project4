@@ -147,22 +147,24 @@ struct Numeric
         {
             if constexpr ( std::is_same<Numeric, int>::value )
             {
-                if constexpr ( std::is_same<decltype(y), int>::value && y == 0 )
+                if constexpr ( std::is_same<decltype(y), int>::value )
                 {
-                    std::cout << "Can't divide by integer 0! Cancelling operation." << std::endl;
-                    return *this;
+                    if ( y == 0 ) // can this be added as an && condition in the above loop? unsure with constexpr
+                    {
+                        std::cout << "Can't divide by integer 0! Cancelling operation." << std::endl;
+                        return *this; 
+                    }
                 }
                 else if ( y < std::numeric_limits<ValueType>::epsilon() )
                 {
                     std::cout << "Can't divide by non-int 0! Cancelling operation." << std::endl;
                     return *this;
                 }
+                
             }
             else if ( y < std::numeric_limits<ValueType>::epsilon() )
             {
                 std::cout << "Warning! Dividing by 0." << std::endl;
-                *heapNumber /= y;
-                return *this;
             }
             
             *heapNumber /= y;
@@ -413,7 +415,10 @@ int main()
     std::cout << std::endl;
     std::cout << "Additional test on divide by 0." << std::endl;
 
-    std::cout << "ft: " << ft/=0 << "    it: " << it/=0 << std::endl;
+    ft/=0;
+    std::cout << "ft: " << ft << std::endl;
+    it/=0; 
+    std::cout << "it: " << it << std::endl;
 
     std::cout << "good to go!" << std::endl;
 }
