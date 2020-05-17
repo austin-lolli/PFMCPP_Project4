@@ -153,9 +153,19 @@ struct Numeric
             return *this;
         }
 
-        Numeric& pow( const Numeric operand )
+        Numeric& pow( const Numeric& operand )
         {
             return powInternal( operand );
+        }
+
+        Numeric& apply(std::function<Numeric&(ValueType&)> callable)
+        {
+            if(callable)
+            {
+                return callable(*heapNumber); 
+            }
+
+            return *this;
         }
 
         Numeric& apply( void(*funcPtr)(ValueType&) )
@@ -234,10 +244,7 @@ struct Numeric<double>
         template<typename Callable>
         auto apply(Callable callable) ->  Numeric&
         {
-            if(callable)
-            {
-                callable(*heapNumber);
-            }
+            callable(*heapNumber);
             return *this;
         }
 
@@ -314,18 +321,18 @@ int main()
     powDub.pow(1.0 / b);
     powInt /= 16; // changed value reset from divide function to operator
     std::cout << std::endl;
-  /*   
+    
     std::cout << "Test 2, one UDT ^ another UDT: " << std::endl;
-    std::cout << powFloat << " ^ " << powInt << " = " <<  powFloat.pow(powInt) << std::endl;
-    std::cout << powDub << " ^ " << powFloat << " = " << powDub.pow(powFloat) << std::endl;
-    std::cout << powInt << " ^ "<< powFloat << " = " << powInt.pow(powFloat) << std::endl;
+    std::cout << powFloat << " ^ " << powInt << " = " <<  powFloat.pow(static_cast<float>(powInt)) << std::endl;
+    std::cout << powDub << " ^ " << powFloat << " = " << powDub.pow(static_cast<double>(powFloat)) << std::endl;
+    std::cout << powInt << " ^ "<< powFloat << " = " << powInt.pow(static_cast<int>(powFloat)) << std::endl;
 
-    FloatType xFloat( 1.3f );
-    FloatType yFloat( 2.9f );
-    DoubleType xDouble( 3.33 );
-    DoubleType yDouble( 1.75 );
-    IntType xInt( 4 );
-    IntType yInt( -2 );
+    Numeric<float> xFloat( 1.3f );
+    Numeric<float> yFloat( 2.9f );
+    Numeric<double> xDouble( 3.33 );
+    Numeric<double> yDouble( 1.75 );
+    Numeric<int> xInt( 4 );
+    Numeric<int> yInt( -2 );
 
     std::cout << std::endl;
 
@@ -365,7 +372,7 @@ int main()
     });
 
     std::cout << "Float Type + 2 using Lambda: " << ft << std::endl;
-    std::cout << "Float Type x 3 using Function Pointer: " << ft.apply(tripleFlt) << "\n" << std::endl;   
+    std::cout << "Float Type x 3 using Function Pointer: " << ft.apply(triple) << "\n" << std::endl;   
     std::cout << "Double Type Initial Valule: " << dt << std::endl;
 
     dt.apply( [&dt](double& heapDub) -> DoubleType&
@@ -375,7 +382,7 @@ int main()
     });
 
     std::cout << "Double Type + 2 using Lambda: " << dt << std::endl;
-    std::cout << "Double Type x 3 using Function Pointer: " << dt.apply(tripleDub) << "\n" << std::endl;
+    std::cout << "Double Type x 3 using Function Pointer: " << dt.apply(triple<double>) << "\n" << std::endl;
     std::cout << "Int Type Initial Valule: " << it << std::endl;
 
     it.apply( [&it](int& heapInt) -> IntType&
@@ -385,7 +392,7 @@ int main()
     });
 
     std::cout << "Int Type + 2 using Lambda: " << it << std::endl;
-    std::cout << "Int Type x 3 using Function Pointer: " << it.apply(tripleInt) << "\n" << std::endl;
-*/
+    std::cout << "Int Type x 3 using Function Pointer: " << it.apply(triple) << "\n" << std::endl;
+
     std::cout << "good to go!" << std::endl;
 }
