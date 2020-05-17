@@ -76,6 +76,8 @@ If you need to view an example, see: https://bitbucket.org/MatkatMusic/pfmcpptas
 #include <cmath>
 #include <functional>
 #include <memory>
+#include <type_traits> 
+#include <limits> 
 
 struct Point
 {
@@ -140,15 +142,29 @@ struct Numeric
             *heapNumber *= y;
             return *this;
         }
-
+        
         Numeric& operator/=( const ValueType y )
         {
-            if( y == 0 ) 
+            if constexpr ( std::is_same<Numeric, int>::value )
             {
-                std::cout << "Can't divide by 0! Cancelling operation." << std::endl;
+                if constexpr ( std::is_same<decltype(y), int>::value && y == 0 )
+                {
+                    std::cout << "Can't divide by integer 0! Cancelling operation." << std::endl;
+                    return *this;
+                }
+                else if ( y < std::numeric_limits<ValueType>::epsilon() )
+                {
+                    std::cout << "Can't divide by non-int 0! Cancelling operation." << std::endl;
+                    return *this;
+                }
+            }
+            else if ( y < std::numeric_limits<ValueType>::epsilon() )
+            {
+                std::cout << "Warning! Dividing by 0." << std::endl;
+                *heapNumber /= y;
                 return *this;
             }
-
+            
             *heapNumber /= y;
             return *this;
         }
@@ -393,6 +409,11 @@ int main()
 
     std::cout << "Int Type + 2 using Lambda: " << it << std::endl;
     std::cout << "Int Type x 3 using Function Pointer: " << it.apply(triple) << "\n" << std::endl;
+
+    std::cout << std::endl;
+    std::cout << "Additional test on divide by 0." << std::endl;
+
+    std::cout << "ft: " << ft/=0 << "    it: " << it/=0 << std::endl;
 
     std::cout << "good to go!" << std::endl;
 }
