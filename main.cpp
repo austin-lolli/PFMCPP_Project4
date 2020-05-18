@@ -1,5 +1,4 @@
 
-#include <iostream>
 /*
 Project 4: Part 7 / 9
 Video: Chapter 5 Part 4
@@ -73,11 +72,10 @@ compile/link/run to make sure you don't have any errors
 If you need to view an example, see: https://bitbucket.org/MatkatMusic/pfmcpptasks/src/master/Projects/Project4/Part7Example.cpp
 */
 
+#include <iostream>
 #include <cmath>
 #include <functional>
 #include <memory>
-//#include <type_traits> 
-//#include <limits> 
 
 struct Point
 {
@@ -113,171 +111,171 @@ private:
 template<typename T>
 struct Numeric
 {
-    using ValueType = T;
-    public:
-        Numeric( ValueType n ) : heapNumber( new ValueType(n) ) {}
-        Numeric() : Numeric(0) {}
+    using Type = T;
 
-        ~Numeric()
-        {
-            heapNumber = nullptr;
-        }
+    Numeric( Type n ) : heapNumber( new Type(n) ) {}
+    Numeric() : Numeric(0) {}
 
-        operator ValueType() const { return *heapNumber; }
+    ~Numeric()
+    {
+        heapNumber = nullptr;
+    }
 
-        Numeric& operator+=( const ValueType y )
-        {
-            *heapNumber += y;
-            return *this;
-        }
+    operator Type() const { return *heapNumber; }
 
-        Numeric& operator-=( const ValueType y )
-        {
-            *heapNumber -= y;
-            return *this;
-        }
+    Numeric& operator+=( const Type y )
+    {
+        *heapNumber += y;
+        return *this;
+    }
 
-        Numeric& operator*=( const ValueType y )
-        {
-            *heapNumber *= y;
-            return *this;
-        }
+    Numeric& operator-=( const Type y )
+    {
+        *heapNumber -= y;
+        return *this;
+    }
+
+    Numeric& operator*=( const Type y )
+    {
+        *heapNumber *= y;
+        return *this;
+    }
   
-        Numeric& operator/=( const ValueType y )
+    Numeric& operator/=( const Type y )
+    {
+        if constexpr ( std::is_same<Type, int>::value )
         {
-            if constexpr ( std::is_same<ValueType, int>::value )
+            // self note: int is not the same as const int and your comparison must reflect that!
+            if constexpr ( std::is_same<decltype(y), const int>::value )
             {
-                // self note: int is not the same as const int and your comparison must reflect that!
-                if constexpr ( std::is_same<decltype(y), const int>::value )
+                if ( y == 0 ) 
                 {
-                    if ( y == 0 ) 
-                    {
-                        std::cout << "Can't divide by integer 0! Cancelling operation." << std::endl;
-                        return *this; 
-                    }
+                    std::cout << "Can't divide by integer 0! Cancelling operation." << std::endl;
+                    return *this; 
                 }
-                else if ( y < std::numeric_limits<ValueType>::epsilon() )
-                {
-                    std::cout << "Can't divide by non-int 0! Cancelling operation." << std::endl;
-                    return *this;
-                }
+            }
+            else if ( y < std::numeric_limits<Type>::epsilon() )
+            {
+                std::cout << "Can't divide by non-int 0! Cancelling operation." << std::endl;
+                return *this;
+            }
                 
-            }
-            else if ( y < std::numeric_limits<ValueType>::epsilon() )
-            {
-                std::cout << "Warning! Dividing by 0." << std::endl;
-            }
+        }
+        else if ( y < std::numeric_limits<Type>::epsilon() )
+        {
+            std::cout << "Warning! Dividing by 0." << std::endl;
+        }
             
-            *heapNumber /= y;
-            return *this;
-        }
+        *heapNumber /= y;
+        return *this;
+    }
 
 
-        Numeric& pow( const Numeric& operand )
+    Numeric& pow( const Numeric& operand )
+    {
+        return powInternal( operand );
+    }
+
+    Numeric& apply(std::function<Numeric&(Type&)> callable)
+    {
+        if(callable)
         {
-            return powInternal( operand );
+            return callable(*heapNumber); 
         }
 
-        Numeric& apply(std::function<Numeric&(ValueType&)> callable)
+        return *this;
+    }
+
+    Numeric& apply( void(*funcPtr)(Type&) )
+    {
+        if(funcPtr)
         {
-            if(callable)
-            {
-                return callable(*heapNumber); 
-            }
-
-            return *this;
+            funcPtr(*heapNumber); 
         }
 
-        Numeric& apply( void(*funcPtr)(ValueType&) )
+        return *this;
+    }
+
+private:
+    std::unique_ptr<Type> heapNumber{ new Type() };
+    Numeric& powInternal( Type x )
+    {
+        if( heapNumber != nullptr )
         {
-            if(funcPtr)
-            {
-                funcPtr(*heapNumber); 
-            }
-
-            return *this;
+            *heapNumber = static_cast<Type>( std::pow( *heapNumber, x ) );
         }
-
-    private:
-        std::unique_ptr<ValueType> heapNumber{ new ValueType() };
-        Numeric& powInternal( ValueType x )
-        {
-            if( heapNumber != nullptr )
-            {
-                *heapNumber = static_cast<ValueType>( std::pow( *heapNumber, x ) );
-            }
-            return *this;
-        }
+        return *this;
+    }
 
 };
 
 template<>
 struct Numeric<double>
 {
-    using ValueType = double;
-    public:
-        Numeric( ValueType n ) : heapNumber( new ValueType(n) ) {}
-        Numeric() : Numeric(0) {}
+    using Type = double;
 
-        ~Numeric()
+    Numeric( Type n ) : heapNumber( new Type(n) ) {}
+    Numeric() : Numeric(0) {}
+
+    ~Numeric()
+    {
+        heapNumber = nullptr;
+    }
+
+    operator Type() const { return *heapNumber; }
+
+    Numeric& operator+=( const Type y )
+    {
+        *heapNumber += y;
+        return *this;
+    }
+
+    Numeric& operator-=( const Type y )
+    {
+        *heapNumber -= y;
+        return *this;
+    }
+
+    Numeric& operator*=( const Type y )
+    {
+        *heapNumber *= y;
+        return *this;
+    }
+
+    Numeric& operator/=( const Type y )
+    {
+        if( y == 0.0 ) 
         {
-            heapNumber = nullptr;
-        }
-
-        operator ValueType() const { return *heapNumber; }
-
-        Numeric& operator+=( const ValueType y )
-        {
-            *heapNumber += y;
+            std::cout << "Can't divide by 0! Cancelling operation." << std::endl;
             return *this;
         }
 
-        Numeric& operator-=( const ValueType y )
-        {
-            *heapNumber -= y;
-            return *this;
-        }
+        *heapNumber /= y;
+        return *this;
+    }
 
-        Numeric& operator*=( const ValueType y )
-        {
-            *heapNumber *= y;
-            return *this;
-        }
+    Numeric& pow( const Numeric& operand )
+    {
+        return powInternal( operand );
+    }
 
-        Numeric& operator/=( const ValueType y )
-        {
-            if( y == 0.0 ) 
-            {
-                std::cout << "Can't divide by 0! Cancelling operation." << std::endl;
-                return *this;
-            }
+    template<typename Callable>
+    auto apply(Callable callable) ->  Numeric&
+    {
+        callable(*heapNumber);
+        return *this;
+    }
 
-            *heapNumber /= y;
-            return *this;
-        }
-
-        Numeric& pow( const Numeric operand )
+private:
+    std::unique_ptr<Type> heapNumber{ new Type() };
+    Numeric& powInternal( Type x )
+    {
+        if( heapNumber != nullptr )
         {
-            return powInternal( operand );
+            *heapNumber = static_cast<Type>( std::pow( *heapNumber, x ) );
         }
-
-        template<typename Callable>
-        auto apply(Callable callable) ->  Numeric&
-        {
-            callable(*heapNumber);
-            return *this;
-        }
-
-    private:
-        std::unique_ptr<ValueType> heapNumber{ new ValueType() };
-        Numeric& powInternal( ValueType x )
-        {
-            if( heapNumber != nullptr )
-            {
-                *heapNumber = static_cast<ValueType>( std::pow( *heapNumber, x ) );
-            }
-            return *this;
-        }
+        return *this;
+    }
 };
 
 
@@ -409,4 +407,5 @@ int main()
     std::cout << "good to go!" << std::endl;
 
     dt.pow(dt);
+
 }
