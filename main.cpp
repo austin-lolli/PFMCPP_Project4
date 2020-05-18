@@ -407,4 +407,6 @@ int main()
     std::cout << "it: " << it << std::endl;
 
     std::cout << "good to go!" << std::endl;
+
+    dt.pow(dt);
 }
