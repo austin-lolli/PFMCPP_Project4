@@ -76,8 +76,8 @@ If you need to view an example, see: https://bitbucket.org/MatkatMusic/pfmcpptas
 #include <cmath>
 #include <functional>
 #include <memory>
-#include <type_traits> 
-#include <limits> 
+//#include <type_traits> 
+//#include <limits> 
 
 struct Point
 {
@@ -142,14 +142,15 @@ struct Numeric
             *heapNumber *= y;
             return *this;
         }
-        
+  
         Numeric& operator/=( const ValueType y )
         {
-            if constexpr ( std::is_same<Numeric, int>::value )
+            if constexpr ( std::is_same<ValueType, int>::value )
             {
-                if constexpr ( std::is_same<decltype(y), int>::value )
+                // self note: int is not the same as const int and your comparison must reflect that!
+                if constexpr ( std::is_same<decltype(y), const int>::value )
                 {
-                    if ( y == 0 ) // can this be added as an && condition in the above loop? unsure with constexpr
+                    if ( y == 0 ) 
                     {
                         std::cout << "Can't divide by integer 0! Cancelling operation." << std::endl;
                         return *this; 
@@ -170,6 +171,7 @@ struct Numeric
             *heapNumber /= y;
             return *this;
         }
+
 
         Numeric& pow( const Numeric& operand )
         {
@@ -413,7 +415,7 @@ int main()
     std::cout << "Int Type x 3 using Function Pointer: " << it.apply(triple) << "\n" << std::endl;
 
     std::cout << std::endl;
-    std::cout << "Additional test on divide by 0." << std::endl;
+    std::cout << "Additional tests on divide by 0." << std::endl;
 
     ft/=0;
     std::cout << "ft: " << ft << std::endl;
