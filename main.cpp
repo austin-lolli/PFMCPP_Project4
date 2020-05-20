@@ -1,5 +1,4 @@
 
-#include <iostream>
 /*
 Project 4: Part 7 / 9
 Video: Chapter 5 Part 4
@@ -24,8 +23,8 @@ Templates and Containers
         treat this type declaration via 'using' as a static member variable
         use this Type alias as the argument everywhere you previously used the template argument.
         this will make it very easy to change the type if needed.
-            i.e. if you have 'std::unique_ptr<NumericType> value;' before
-                you'd replace NumericType in that variable declaration with '<some name>'
+            i.e. if you have 'std::unique_ptr<Numeric> value;' before
+                you'd replace Numeric in that variable declaration with '<some name>'
         
 #4) you'll need to pair it with decltype() to help the compiler figure out the type of the object 
     your class owns when you make your lambda and free function that takes your unique_ptr.  
@@ -73,20 +72,24 @@ compile/link/run to make sure you don't have any errors
 If you need to view an example, see: https://bitbucket.org/MatkatMusic/pfmcpptasks/src/master/Projects/Project4/Part7Example.cpp
 */
 
-
+#include <iostream>
 #include <cmath>
 #include <functional>
-
-struct FloatType;
-struct IntType;
-struct DoubleType;
+#include <memory>
 
 struct Point
 {
     Point(float a, float b) : x(a), y(b) {}
-    Point(FloatType& a, FloatType& b);
-    Point(DoubleType& a, DoubleType& b);
-    Point(IntType& a, IntType& b);
+    
+    //constructor to take numeric types
+    template<typename T>
+    Point(T& a, T& b) : Point(static_cast<float>(a), static_cast<float>(b) ) { }
+
+    template<typename T> 
+    Point& multiply( T& m)
+    {
+        return multiply(static_cast<float>(m));
+    }
 
     Point& multiply(float m)
     {
@@ -94,397 +97,207 @@ struct Point
         y *= m;
         return *this;
     }
-    
-    Point& multiply( FloatType& m );
-    Point& multiply( DoubleType& m );
-    Point& multiply( IntType& m );
 
-    void toString();
+    void toString()
+    {
+        std::cout << "( " << x << ", " << y << " )" << std::endl;
+    }
 
 private:
     float x{0}, y{0};
 };
 
-
-// float UDT 
-struct FloatType
+//template class
+template<typename T>
+struct Numeric
 {
-    public:
-        FloatType( float f ) : heapFloat( new float(f) ) {}
-        FloatType() : FloatType(0) {}
+    using Type = T;
 
-        ~FloatType()
+    Numeric( Type n ) : heapNumber( new Type(n) ) {}
+    Numeric() : Numeric(0) {}
+
+    ~Numeric()
+    {
+        heapNumber = nullptr;
+    }
+
+    operator Type() const { return *heapNumber; }
+
+    Numeric& operator+=( const Type y )
+    {
+        *heapNumber += y;
+        return *this;
+    }
+
+    Numeric& operator-=( const Type y )
+    {
+        *heapNumber -= y;
+        return *this;
+    }
+
+    Numeric& operator*=( const Type y )
+    {
+        *heapNumber *= y;
+        return *this;
+    }
+  
+    Numeric& operator/=( const Type y )
+    {
+        if constexpr ( std::is_same<Type, int>::value )
         {
-            delete heapFloat;
-            heapFloat = nullptr;
-        }
-
-        operator float() const { return *heapFloat; }
-
-        FloatType& operator+=( const float y )
-        {
-            *heapFloat += y;
-            return *this;
-        }
-
-        FloatType& operator-=( const float y )
-        {
-            *heapFloat -= y;
-            return *this;
-        }
-
-        FloatType& operator*=( const float y )
-        {
-            *heapFloat *= y;
-            return *this;
-        }
-
-        FloatType& operator/=( const float y )
-        {
-            *heapFloat /= y;
-            return *this;
-        }
-
-        FloatType& pow( const FloatType& operand );
-        FloatType& pow( const DoubleType& operand );
-        FloatType& pow( const IntType& operand );
-        FloatType& pow( float operand );
-
-        FloatType& apply(std::function<FloatType&(float&)> callable)
-        {
-            if(callable)
+            // self note: int is not the same as const int and your comparison must reflect that!
+            if constexpr ( std::is_same<decltype(y), const int>::value )
             {
-                return callable(*heapFloat); 
+                if ( y == 0 ) 
+                {
+                    std::cout << "Can't divide by integer 0! Cancelling operation." << std::endl;
+                    return *this; 
+                }
             }
-
-            return *this;
-        }
-        FloatType& apply( void(*funcPtr)(float&))
-        {
-            if(funcPtr)
+            else if ( y < std::numeric_limits<Type>::epsilon() )
             {
-                funcPtr(*heapFloat);
-            }
-
-            return *this;
-        }
-
-    private:
-        float* heapFloat = nullptr; 
-        FloatType& powInternal( float x );
-
-};
-
-// double UDT
-struct DoubleType
-{
-    public:
-        DoubleType( double d ) : heapDub( new double(d) ) {}
-        ~DoubleType()
-        {
-            delete heapDub;
-            heapDub = nullptr;
-        }
-
-        operator double() const { return *heapDub; }
-
-        DoubleType& operator+=( const double y )
-        {
-            *heapDub += y;
-            return *this;
-        }
-
-        DoubleType& operator-=( const double y )
-        {
-            *heapDub -= y;
-            return *this;
-        }
-
-        DoubleType& operator*=( const double y )
-        {
-            *heapDub *= y;
-            return *this;
-        }
-
-        DoubleType& operator/=( const double y )
-        {
-            *heapDub /= y;
-            return *this;
-        }
-    
-        DoubleType& pow( const FloatType& operand );
-        DoubleType& pow( const DoubleType& operand );
-        DoubleType& pow( const IntType& operand );
-        DoubleType& pow( double operand );
-    
-        DoubleType& apply(std::function<DoubleType&(double&)> callable)
-        {
-            if(callable)
-            {
-                return callable(*heapDub); 
-            }
-
-            return *this;
-        }
-        DoubleType& apply( void(*funcPtr)(double&))
-        {
-            if(funcPtr)
-            {
-                funcPtr(*heapDub);    
-            }
-
-            return *this;
-        }
-
-    private:
-        double* heapDub = nullptr;
-        DoubleType& powInternal( double x );
-
-};
-
-// int UDT
-#include <iostream>
-struct IntType
-{
-    public:
-        IntType( int i ) : heapInt( new int(i) ) {}
-        ~IntType()
-        {
-            delete heapInt;
-            heapInt = nullptr;
-        }
-
-        operator int() const { return *heapInt; }
-
-        IntType& operator+=( const int y )
-        {
-            *heapInt += y;
-            return *this;
-        }
-
-        IntType& operator-=( const int y )
-        {
-            *heapInt -= y;
-            return *this;
-        }
-
-        IntType& operator*=( const int y )
-        {
-            *heapInt *= y;
-            return *this;
-        }
-
-        IntType& operator/=( const int y )
-        {
-            if( y == 0 )
-            {
-                std::cout << "Can't divide by 0! Cancelling divide operation."  << std::endl;       
+                std::cout << "Can't divide by non-int 0! Cancelling operation." << std::endl;
                 return *this;
             }
-    
-            *heapInt /= y;
-            return *this;
+                
         }
-
-        IntType& pow( const FloatType& operand );
-        IntType& pow( const DoubleType& operand );
-        IntType& pow( const IntType& operand );
-        IntType& pow( int operand );
-
-        IntType& apply(std::function<IntType&(int&)> callable)
+        else if ( y < std::numeric_limits<Type>::epsilon() )
         {
-            if(callable)
-            {
-                return callable(*heapInt); 
-            }
+            std::cout << "Warning! Dividing by 0." << std::endl;
+        }
             
-            return *this;
-        }
+        *heapNumber /= y;
+        return *this;
+    }
 
-        IntType& apply( void(*funcPtr)(int&))
+
+    Numeric& pow( const Numeric& operand )
+    {
+        return powInternal( operand );
+    }
+
+    Numeric& apply(std::function<Numeric&(std::unique_ptr<Type>&)> callable)
+    {
+        if(callable)
         {
-            if(funcPtr)
-            {
-                funcPtr(*heapInt);    
-            }
-
-            return *this;
+            return callable(heapNumber); 
         }
 
-    
-    private:
-        int* heapInt = nullptr;
-        IntType& powInternal( int x );
+        return *this;
+    }
+
+    Numeric& apply( void(*funcPtr)(std::unique_ptr<Type>&) )
+    {
+        if(funcPtr)
+        {
+            funcPtr(heapNumber); 
+        }
+
+        return *this;
+    }
+
+private:
+    std::unique_ptr<Type> heapNumber{ new Type() };
+    Numeric& powInternal( Type x )
+    {
+        if( heapNumber != nullptr )
+        {
+            *heapNumber = static_cast<Type>( std::pow( *heapNumber, x ) );
+        }
+        return *this;
+    }
+
 };
 
-//float type operators
-
-
-//point constructor implementations
-Point::Point(FloatType& a, FloatType& b) : Point(static_cast<float>(a), static_cast<float>(b) ) { } 
-
-Point::Point(DoubleType& a, DoubleType& b) : Point ( static_cast<float>(a), static_cast<float>(b) ) { }
-
-
-Point::Point(IntType& a, IntType& b) : Point ( static_cast<float>(a), static_cast<float>(b) ) { }
-
-//point multiply UDT implementations
-Point& Point::multiply( FloatType& m )
+template<>
+struct Numeric<double>
 {
-    return multiply(static_cast<float>(m));
-}
+    using Type = double;
 
-Point& Point::multiply( DoubleType& m )
-{
-    return multiply(static_cast<float>(m));
-}
+    Numeric( Type n ) : heapNumber( new Type(n) ) {}
+    Numeric() : Numeric(0) {}
 
-Point& Point::multiply( IntType& m )
-{
-    return multiply(static_cast<float>(m));
-}
-
-// point to string
-#include <iostream>
-void Point::toString()
-{
-    std::cout << "( " << x << ", " << y << " )" << std::endl;
-}
-
-// pow implementations for FloatType
-FloatType& FloatType::pow( const FloatType& operand )
-{
-    return powInternal( static_cast<float>(operand) );
-}
-
-FloatType& FloatType::pow( const DoubleType& operand )
-{
-    return powInternal( static_cast<float>(operand) );
-}
-
-FloatType& FloatType::pow( const IntType& operand )
-{
-    return powInternal( static_cast<float>(operand) );
-}
-
-FloatType& FloatType::pow( float operand )
-{
-    return powInternal(operand);
-}
-
-// pow implementations for DoubleType
-DoubleType& DoubleType::pow( const FloatType& operand )
-{
-    return powInternal( static_cast<double>(operand) );
-}
-
-DoubleType& DoubleType::pow( const DoubleType& operand )
-{
-    return powInternal( static_cast<double>(operand) );
-}
-
-DoubleType& DoubleType::pow( const IntType& operand )
-{
-    return powInternal( static_cast<double>(operand) );
-}
-
-DoubleType& DoubleType::pow( double operand )
-{
-    return powInternal(operand);
-}
-
-// pow implementations for IntType
-IntType& IntType::pow( const FloatType& operand )
-{
-    return powInternal( static_cast<int>(operand) );
-}
-
-IntType& IntType::pow( const DoubleType& operand )
-{
-    return powInternal( static_cast<int>(operand) );
-}
-
-IntType& IntType::pow( const IntType& operand )
-{
-    return powInternal( static_cast<int>(operand) );
-}
-
-IntType& IntType::pow( int operand )
-{
-    return powInternal(operand);
-}
-
-
-// powInternal implementations
-FloatType& FloatType::powInternal( float x )
-{
-    if( heapFloat != nullptr )
+    ~Numeric()
     {
-        *heapFloat = std::pow( *heapFloat, x );
+        heapNumber = nullptr;
     }
-    return *this;
-}
 
-DoubleType& DoubleType::powInternal( double x )
-{
-    if( heapDub != nullptr )
+    operator Type() const { return *heapNumber; }
+
+    Numeric& operator+=( const Type y )
     {
-        *heapDub = std::pow( *heapDub, x );
+        *heapNumber += y;
+        return *this;
     }
-    return *this;
-}
 
-IntType& IntType::powInternal( int x )
-{
-    if( heapInt != nullptr )
+    Numeric& operator-=( const Type y )
     {
-        //static cast because pow returns a float or double
-        *heapInt = static_cast<int>( std::pow( *heapInt, x ) );
+        *heapNumber -= y;
+        return *this;
     }
-    return *this;
+
+    Numeric& operator*=( const Type y )
+    {
+        *heapNumber *= y;
+        return *this;
+    }
+
+    Numeric& operator/=( const Type y )
+    {
+        if( y == 0.0 ) 
+        {
+            std::cout << "Can't divide by 0! Cancelling operation." << std::endl;
+            return *this;
+        }
+
+        *heapNumber /= y;
+        return *this;
+    }
+
+    Numeric& pow( const Numeric& operand )
+    {
+        return powInternal( operand );
+    }
+
+    template<typename Callable>
+    auto apply(Callable callable) ->  Numeric&
+    {
+        callable(heapNumber);
+        return *this;
+    }
+
+private:
+    std::unique_ptr<Type> heapNumber{ new Type() };
+    Numeric& powInternal( Type x )
+    {
+        if( heapNumber != nullptr )
+        {
+            *heapNumber = static_cast<Type>( std::pow( *heapNumber, x ) );
+        }
+        return *this;
+    }
+};
+
+
+// free functions to pass to apply
+template<typename T>
+void triple(std::unique_ptr<T> &heapNumber)
+{
+    *heapNumber *= 3;
 }
 
-// functions to pass to apply
-void tripleFlt(float &heapFloat)
-{
-    heapFloat *= 3.f;
-}
-
-void tripleDub(double &heapDouble)
-{
-    heapDouble *= 3.0;
-}
-
-void tripleInt(int &heapInt)
-{
-    heapInt *= 3;
-}
 
 int main()
 {
     
-    FloatType ft( 5.5f );
-    DoubleType dt( 11.1 );
-    IntType it ( 34 );
-    DoubleType pi( 3.14 );
+    Numeric<float> ft( 5.5f );
+    Numeric<double> dt( 11.1 );
+    Numeric<int> it( 34 );
+    Numeric<double> pi( 3.14 );
 
-/*
-    std::cout << "The result of FloatType^4 divided by IntType is: " << ft.multiply( ft ).multiply( ft ).divide( it ) << std::endl;
-    std::cout << "The result of DoubleType times 3 plus IntType is : " << dt.multiply( 3 ).add( it ) << std::endl;
-    std::cout << "The result of IntType divided by 3.14 multiplied by DoubleType minus FloatType is: " << it.divide( static_cast<int>(pi) ).multiply( static_cast<int>(dt) ).subtract( static_cast<int>(ft) ) << std::endl;
-    std::cout << "An operation followed by attempts to divide by 0, which are ignored and warns user: " << std::endl;
-    std::cout << it.multiply(it).divide(0).divide(0.0f).divide(0.0)<<std::endl;
-    
-    std::cout << "FloatType x IntType  =  " << it.multiply( static_cast<int>(ft) ) << std::endl;
-    std::cout << "(IntType + DoubleType + FloatType) x 24 = " << it.add( static_cast<int>(dt) ).add( static_cast<int>(ft) ).multiply( 24 ) << std::endl;
-    
-    std::cout << std::endl;
-    std::cout << std::endl;
-
- */
-    FloatType powFloat( 2.4f );
-    DoubleType powDub( 12.25 );
-    IntType powInt( 2 );
+    Numeric<float> powFloat( 2.4f );
+    Numeric<double> powDub( 12.25 );
+    Numeric<int> powInt( 2 );
     float a = 2.5f;
     double b = 1.89;
     int c = 5;
@@ -512,16 +325,16 @@ int main()
     std::cout << std::endl;
     
     std::cout << "Test 2, one UDT ^ another UDT: " << std::endl;
-    std::cout << powFloat << " ^ " << powInt << " = " <<  powFloat.pow(powInt) << std::endl;
-    std::cout << powDub << " ^ " << powFloat << " = " << powDub.pow(powFloat) << std::endl;
-    std::cout << powInt << " ^ "<< powFloat << " = " << powInt.pow(powFloat) << std::endl;
+    std::cout << powFloat << " ^ " << powInt << " = " <<  powFloat.pow(static_cast<float>(powInt)) << std::endl;
+    std::cout << powDub << " ^ " << powFloat << " = " << powDub.pow(static_cast<double>(powFloat)) << std::endl;
+    std::cout << powInt << " ^ "<< powFloat << " = " << powInt.pow(static_cast<int>(powFloat)) << std::endl;
 
-    FloatType xFloat( 1.3f );
-    FloatType yFloat( 2.9f );
-    DoubleType xDouble( 3.33 );
-    DoubleType yDouble( 1.75 );
-    IntType xInt( 4 );
-    IntType yInt( -2 );
+    Numeric<float> xFloat( 1.3f );
+    Numeric<float> yFloat( 2.9f );
+    Numeric<double> xDouble( 3.33 );
+    Numeric<double> yDouble( 1.75 );
+    Numeric<int> xInt( 4 );
+    Numeric<int> yInt( -2 );
 
     std::cout << std::endl;
 
@@ -549,36 +362,50 @@ int main()
     std::cout << std::endl;
     std::cout << std::endl;
 
+    using FloatType = decltype(ft);
+    using DoubleType = decltype(dt);
+    using IntType = decltype(it);
     std::cout << "Float Type Initial Valule: " << ft << std::endl;
 
-    ft.apply( [&ft](float& heapFloat) -> FloatType&
+    ft.apply( [&ft](std::unique_ptr<FloatType::Type>& heapFloat) -> FloatType&
     {
-        heapFloat += 2.f;
+        *heapFloat += 2.f;
         return ft;
     });
 
     std::cout << "Float Type + 2 using Lambda: " << ft << std::endl;
-    std::cout << "Float Type x 3 using Function Pointer: " << ft.apply(tripleFlt) << "\n" << std::endl;   
+    std::cout << "Float Type x 3 using Function Pointer: " << ft.apply(triple) << "\n" << std::endl;   
     std::cout << "Double Type Initial Valule: " << dt << std::endl;
 
-    dt.apply( [&dt](double& heapDub) -> DoubleType&
+    dt.apply( [&dt](std::unique_ptr<DoubleType::Type>& heapDub) -> DoubleType&
     {
-        heapDub += 2.0;
+        *heapDub += 2.0;
         return dt;
     });
 
     std::cout << "Double Type + 2 using Lambda: " << dt << std::endl;
-    std::cout << "Double Type x 3 using Function Pointer: " << dt.apply(tripleDub) << "\n" << std::endl;
+    std::cout << "Double Type x 3 using Function Pointer: " << dt.apply(triple<double>) << "\n" << std::endl;
     std::cout << "Int Type Initial Valule: " << it << std::endl;
 
-    it.apply( [&it](int& heapInt) -> IntType&
+    it.apply( [&it](std::unique_ptr<IntType::Type>& heapInt) -> IntType&
     {
-        heapInt += 2;
+        *heapInt += 2;
         return it;
     });
 
     std::cout << "Int Type + 2 using Lambda: " << it << std::endl;
-    std::cout << "Int Type x 3 using Function Pointer: " << it.apply(tripleInt) << "\n" << std::endl;
+    std::cout << "Int Type x 3 using Function Pointer: " << it.apply(triple) << "\n" << std::endl;
+
+    std::cout << std::endl;
+    std::cout << "Additional tests on divide by 0." << std::endl;
+
+    ft/=0;
+    std::cout << "ft: " << ft << std::endl;
+    it/=0; 
+    std::cout << "it: " << it << std::endl;
 
     std::cout << "good to go!" << std::endl;
+
+    dt.pow(dt);
+
 }
