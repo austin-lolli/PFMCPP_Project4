@@ -367,9 +367,9 @@ int main()
     using IntType = decltype(it);
     std::cout << "Float Type Initial Valule: " << ft << std::endl;
 
-    ft.apply( [&ft](float& heapFloat) -> FloatType&
+    ft.apply( [&ft](std::unique_ptr<FloatType::Type>& heapFloat) -> FloatType&
     {
-        heapFloat += 2.f;
+        *heapFloat += 2.f;
         return ft;
     });
 
@@ -377,9 +377,9 @@ int main()
     std::cout << "Float Type x 3 using Function Pointer: " << ft.apply(triple) << "\n" << std::endl;   
     std::cout << "Double Type Initial Valule: " << dt << std::endl;
 
-    dt.apply( [&dt](double& heapDub) -> DoubleType&
+    dt.apply( [&dt](std::unique_ptr<DoubleType::Type>& heapDub) -> DoubleType&
     {
-        heapDub += 2.0;
+        *heapDub += 2.0;
         return dt;
     });
 
@@ -387,9 +387,9 @@ int main()
     std::cout << "Double Type x 3 using Function Pointer: " << dt.apply(triple<double>) << "\n" << std::endl;
     std::cout << "Int Type Initial Valule: " << it << std::endl;
 
-    it.apply( [&it](int& heapInt) -> IntType&
+    it.apply( [&it](std::unique_ptr<IntType::Type>& heapInt) -> IntType&
     {
-        heapInt += 2;
+        *heapInt += 2;
         return it;
     });
 
