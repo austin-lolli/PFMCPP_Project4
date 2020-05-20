@@ -176,21 +176,21 @@ struct Numeric
         return powInternal( operand );
     }
 
-    Numeric& apply(std::function<Numeric&(Type&)> callable)
+    Numeric& apply(std::function<Numeric&(std::unique_ptr<Type>&)> callable)
     {
         if(callable)
         {
-            return callable(*heapNumber); 
+            return callable(heapNumber); 
         }
 
         return *this;
     }
 
-    Numeric& apply( void(*funcPtr)(Type&) )
+    Numeric& apply( void(*funcPtr)(std::unique_ptr<Type>&) )
     {
         if(funcPtr)
         {
-            funcPtr(*heapNumber); 
+            funcPtr(heapNumber); 
         }
 
         return *this;
@@ -262,7 +262,7 @@ struct Numeric<double>
     template<typename Callable>
     auto apply(Callable callable) ->  Numeric&
     {
-        callable(*heapNumber);
+        callable(heapNumber);
         return *this;
     }
 
@@ -281,9 +281,9 @@ private:
 
 // free functions to pass to apply
 template<typename T>
-void triple(T &heapNumber)
+void triple(std::unique_ptr<T> &heapNumber)
 {
-    heapNumber *= 3;
+    *heapNumber *= 3;
 }
 
 
