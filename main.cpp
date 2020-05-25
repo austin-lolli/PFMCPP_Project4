@@ -311,10 +311,14 @@ struct Numeric
         return *this;
     }
 
-
-    Numeric& pow( const Numeric& operand )
+    template<typename OtherType>
+    Numeric& pow( const OtherType y )
     {
-        return powInternal( operand );
+        if( heapNumber != nullptr )
+        {
+            *heapNumber = static_cast<Type>( std::pow( *heapNumber, static_cast<Type>(y) ) );
+        }
+        return *this;
     }
 
     template<typename Callable>
@@ -326,14 +330,6 @@ struct Numeric
 
 private:
     std::unique_ptr<Type> heapNumber{ new Type() };
-    Numeric& powInternal( Type x )
-    {
-        if( heapNumber != nullptr )
-        {
-            *heapNumber = static_cast<Type>( std::pow( *heapNumber, x ) );
-        }
-        return *this;
-    }
 
 };
 
@@ -464,6 +460,6 @@ int main()
 
     std::cout << "good to go!" << std::endl;
 
-    dt.pow(dt);
+    //dt.pow(dt);
 
 }
