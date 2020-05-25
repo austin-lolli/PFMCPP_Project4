@@ -317,89 +317,6 @@ struct Numeric
         return powInternal( operand );
     }
 
-    Numeric& apply(std::function<Numeric&(std::unique_ptr<Type>&)> callable)
-    {
-        if(callable)
-        {
-            return callable(heapNumber); 
-        }
-
-        return *this;
-    }
-
-    Numeric& apply( void(*funcPtr)(std::unique_ptr<Type>&) )
-    {
-        if(funcPtr)
-        {
-            funcPtr(heapNumber); 
-        }
-
-        return *this;
-    }
-
-private:
-    std::unique_ptr<Type> heapNumber{ new Type() };
-    Numeric& powInternal( Type x )
-    {
-        if( heapNumber != nullptr )
-        {
-            *heapNumber = static_cast<Type>( std::pow( *heapNumber, x ) );
-        }
-        return *this;
-    }
-
-};
-
-template<>
-struct Numeric<double>
-{
-    using Type = double;
-
-    Numeric( Type n ) : heapNumber( new Type(n) ) {}
-    Numeric() : Numeric(0) {}
-
-    ~Numeric()
-    {
-        heapNumber = nullptr;
-    }
-
-    operator Type() const { return *heapNumber; }
-
-    Numeric& operator+=( const Type y )
-    {
-        *heapNumber += y;
-        return *this;
-    }
-
-    Numeric& operator-=( const Type y )
-    {
-        *heapNumber -= y;
-        return *this;
-    }
-
-    Numeric& operator*=( const Type y )
-    {
-        *heapNumber *= y;
-        return *this;
-    }
-
-    Numeric& operator/=( const Type y )
-    {
-        if( y == 0.0 ) 
-        {
-            std::cout << "Can't divide by 0! Cancelling operation." << std::endl;
-            return *this;
-        }
-
-        *heapNumber /= y;
-        return *this;
-    }
-
-    Numeric& pow( const Numeric& operand )
-    {
-        return powInternal( operand );
-    }
-
     template<typename Callable>
     auto apply(Callable callable) ->  Numeric&
     {
@@ -417,8 +334,8 @@ private:
         }
         return *this;
     }
-};
 
+};
 
 // free functions to pass to apply
 template<typename T>
@@ -446,7 +363,7 @@ int main()
     std::cout << "New tests added for Project 4 Part 5 (Operator Overloading):" << std::endl;
     std::cout << powFloat << " + " << b << " = " << (powFloat += static_cast<float>(b)) << std::endl;
     std::cout << powFloat << " * " << it << " = " << (powFloat *= static_cast<float>(it)) << std::endl;
-    std::cout << dt << " * " << powDub << " = " << (dt *= powDub) << std::endl;
+    std::cout << dt << " * " << powDub << " = " << (dt *= static_cast<double>(powDub)) << std::endl;
     std::cout << dt << " / " << powFloat << " = " << (dt /= static_cast<double>(powFloat)) << std::endl;
     std::cout << powInt << " - " << ft << " = " << (powInt -= static_cast<int>(ft)) << std::endl;
     std::cout << powDub << " * " << c << " = " << (powDub *= static_cast<double>(c)) << std::endl;
@@ -515,7 +432,7 @@ int main()
     });
 
     std::cout << "Float Type + 2 using Lambda: " << ft << std::endl;
-    std::cout << "Float Type x 3 using Function Pointer: " << ft.apply(triple) << "\n" << std::endl;   
+    std::cout << "Float Type x 3 using Function Pointer: " << ft.apply(triple<float>) << "\n" << std::endl;   
     std::cout << "Double Type Initial Valule: " << dt << std::endl;
 
     dt.apply( [&dt](std::unique_ptr<DoubleType::Type>& heapDub) -> DoubleType&
@@ -535,7 +452,7 @@ int main()
     });
 
     std::cout << "Int Type + 2 using Lambda: " << it << std::endl;
-    std::cout << "Int Type x 3 using Function Pointer: " << it.apply(triple) << "\n" << std::endl;
+    std::cout << "Int Type x 3 using Function Pointer: " << it.apply(triple<int>) << "\n" << std::endl;
 
     std::cout << std::endl;
     std::cout << "Additional tests on divide by 0." << std::endl;
