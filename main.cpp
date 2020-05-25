@@ -261,29 +261,32 @@ struct Numeric
 
     operator Type() const { return *heapNumber; }
 
-    Numeric& operator+=( const Type y )
+    template<typename OtherType>
+    Numeric& operator+=( const OtherType y )
     {
-        *heapNumber += y;
+        *heapNumber += static_cast<Type>(y);
         return *this;
     }
 
-    Numeric& operator-=( const Type y )
+    template<typename OtherType>
+    Numeric& operator-=( const OtherType y )
     {
-        *heapNumber -= y;
+        *heapNumber -= static_cast<Type>(y);
         return *this;
     }
 
-    Numeric& operator*=( const Type y )
+    template<typename OtherType>
+    Numeric& operator*=( const OtherType y )
     {
-        *heapNumber *= y;
+        *heapNumber *= static_cast<Type>(y);
         return *this;
     }
   
-    Numeric& operator/=( const Type y )
+    template<typename OtherType>
+    Numeric& operator/=( const OtherType y )
     {
         if constexpr ( std::is_same<Type, int>::value )
         {
-            // self note: int is not the same as const int and your comparison must reflect that!
             if constexpr ( std::is_same<decltype(y), const int>::value )
             {
                 if ( y == 0 ) 
@@ -304,7 +307,7 @@ struct Numeric
             std::cout << "Warning! Dividing by 0." << std::endl;
         }
             
-        *heapNumber /= y;
+        *heapNumber /= static_cast<Type>(y);
         return *this;
     }
 
