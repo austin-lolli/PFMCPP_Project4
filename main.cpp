@@ -24,8 +24,12 @@ Create a branch named Part8
   
  1) Here is a starting point for how to implement your Temporary struct.
  */
-
+#include <iostream>
+#include <cmath>
+#include <functional>
+#include <memory>
 #include <typeinfo>
+
 template<typename NumericType>
 struct Temporary
 {
@@ -50,11 +54,11 @@ private:
  2) add the definition of Temporary::counter here, which is a static variable and must be defined outside of the class.
     Remember the rules about how to define a Template member variable/function outside of the class.
 */
-int Temporary::counter { 0 };
+
 /*
  3) You'll need to template your overloaded math operator functions in your Templated Class from Ch5 p04
     use static_cast to convert whatever type is passed in to your template's NumericType before performing the +=, -=, etc.  here's an example implementation:
- */
+
 namespace example
 {
 template<typename NumericType>
@@ -70,7 +74,7 @@ struct Numeric
     //snip
 };
 }
-
+ */
 /*
  4) remove your specialized <double> template of your Numeric<T> class from the previous task (ch5 p04)
     replace the 2 apply() functions in your Numeric<T> with the single templated apply() function from the specialized <double> template.
@@ -125,7 +129,7 @@ I'm a Temporary<i> object, #5
 i cubed: 531441
 
 Use a service like https://www.diffchecker.com/diff to compare your output. 
-*/
+
 
 #include <iostream>
 int main()
@@ -208,11 +212,7 @@ int main()
         std::cout << "i cubed: " << i << std::endl;
     }
 }
-
-#include <iostream>
-#include <cmath>
-#include <functional>
-#include <memory>
+*/
 
 struct Point
 {
