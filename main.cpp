@@ -1,3 +1,5 @@
+
+
 /*
 Prject 4: Part 8 / 9
  video: Chapter 5 Part 6 Task 
@@ -338,6 +340,12 @@ template<typename T>
 void triple(std::unique_ptr<T> &heapNumber)
 {
     *heapNumber *= 3;
+}
+
+template<typename T>
+void cube(std::unique_ptr<T> &heapNumber)
+{
+    *heapNumber *= ( (*heapNumber) * (*heapNumber) );
 }
 
 
