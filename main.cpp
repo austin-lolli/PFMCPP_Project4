@@ -45,7 +45,7 @@ struct Temporary
      hint: what qualifier do read-only functions usually have?
      */
      //dont need to dereference v becuase Numeric's conversion function already does this
-    operator NumericType&() const { /* read-only function */ return v; }
+    operator NumericType() const { /* read-only function */ return v; }
     operator NumericType&() { /* read/write function */ return v; }
 private:
     static int counter;
@@ -318,7 +318,7 @@ struct Numeric
     {
         if( heapNumber != nullptr )
         {
-            *heapNumber = static_cast<Type>( std::pow( *heapNumber, static_cast<Type>(y) ) );
+            *heapNumber = static_cast<Type>( std::pow( *heapNumber, static_cast<const Type>(y) ) );
         }
         return *this;
     }
