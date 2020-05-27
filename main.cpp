@@ -264,6 +264,13 @@ struct Numeric
     operator Type() const { return *heapNumber; }
 
     template<typename OtherType>
+    Numeric& operator=( const OtherType y )
+    {
+        *heapNumber = static_cast<Type>(y);
+        return *this;
+    }
+
+    template<typename OtherType>
     Numeric& operator+=( const OtherType y )
     {
         *heapNumber += static_cast<Type>(y);
@@ -351,123 +358,81 @@ void cube(std::unique_ptr<T> &heapNumber)
 
 int main()
 {
+    Numeric<float> f(0.1f);
+    Numeric<int> i(3);
+    Numeric<double> d(4.2);
     
-    Numeric<float> ft( 5.5f );
-    Numeric<double> dt( 11.1 );
-    Numeric<int> it( 34 );
-    Numeric<double> pi( 3.14 );
-
-    Numeric<float> powFloat( 2.4f );
-    Numeric<double> powDub( 12.25 );
-    Numeric<int> powInt( 2 );
-    float a = 2.5f;
-    double b = 1.89;
-    int c = 5;
-
-    std::cout << "New tests added for Project 4 Part 5 (Operator Overloading):" << std::endl;
-    std::cout << powFloat << " + " << b << " = " << (powFloat += static_cast<float>(b)) << std::endl;
-    std::cout << powFloat << " * " << it << " = " << (powFloat *= static_cast<float>(it)) << std::endl;
-    std::cout << dt << " * " << powDub << " = " << (dt *= static_cast<double>(powDub)) << std::endl;
-    std::cout << dt << " / " << powFloat << " = " << (dt /= static_cast<double>(powFloat)) << std::endl;
-    std::cout << powInt << " - " << ft << " = " << (powInt -= static_cast<int>(ft)) << std::endl;
-    std::cout << powDub << " * " << c << " = " << (powDub *= static_cast<double>(c)) << std::endl;
-
-    std::cout << std::endl;
-
-    std::cout << "Pow functions test: " << std::endl;
-    std::cout << powFloat << " ^ " << a << " = " <<  powFloat.pow(a) << std::endl;
-    std::cout << powDub << " ^ " << b << " = " << powDub.pow(b) << std::endl;
-    std::cout << powInt << " ^ "<< c << " = " << powInt.pow(c) << std::endl;
+    f += 2.f;
+    f -= i;
+    f *= d;
+    f /= 2.f;
+    std::cout << "f: " << f << std::endl;
     
-    std::cout << std::endl;
-    std::cout << "Resetting UDT's for Test 2..." << std::endl;
-    powFloat.pow(1.f / a);
-    powDub.pow(1.0 / b);
-    powInt /= 16; // changed value reset from divide function to operator
-    std::cout << std::endl;
+    d += 2.f;
+    d -= i;
+    d *= f;
+    d /= 2.f;
+    std::cout << "d: " << d << std::endl;
     
-    std::cout << "Test 2, one UDT ^ another UDT: " << std::endl;
-    std::cout << powFloat << " ^ " << powInt << " = " <<  powFloat.pow(static_cast<float>(powInt)) << std::endl;
-    std::cout << powDub << " ^ " << powFloat << " = " << powDub.pow(static_cast<double>(powFloat)) << std::endl;
-    std::cout << powInt << " ^ "<< powFloat << " = " << powInt.pow(static_cast<int>(powFloat)) << std::endl;
-
-    Numeric<float> xFloat( 1.3f );
-    Numeric<float> yFloat( 2.9f );
-    Numeric<double> xDouble( 3.33 );
-    Numeric<double> yDouble( 1.75 );
-    Numeric<int> xInt( 4 );
-    Numeric<int> yInt( -2 );
-
-    std::cout << std::endl;
-
-    Point pFloat( xFloat, yFloat);
-    Point pDouble( xDouble, yDouble);
-    Point pInt( xInt, yInt);
-
-    std::cout << "Initial Point Values: " << std::endl;
-    std::cout << "pFloat: ";
-    pFloat.toString();
-    std::cout << "pDouble: ";
-    pDouble.toString();
-    std::cout << "pInt: ";
-    pInt.toString();
-
-    std::cout << std::endl;
-
-    std::cout << "pFloat x 2.1f = ";
-    pFloat.multiply(2.1f).toString();
-    std::cout << "pDouble x -1.4f = ";
-    pDouble.multiply(-1.4f).toString();
-    std::cout << "pInt x .75f = ";
-    pInt.multiply(.75f).toString();
-
-    std::cout << std::endl;
-    std::cout << std::endl;
-
-    using FloatType = decltype(ft);
-    using DoubleType = decltype(dt);
-    using IntType = decltype(it);
-    std::cout << "Float Type Initial Valule: " << ft << std::endl;
-
-    ft.apply( [&ft](std::unique_ptr<FloatType::Type>& heapFloat) -> FloatType&
+    i += 2.f; i -= f; i *= d; i /= 2.f;
+    std::cout << "i: "<< i << std::endl;
+    
+    Point p(f, i);
+    p.toString();
+    
+    d *= -1;
+    std::cout << "d: " << d << std::endl;
+    
+    p.multiply(d.pow(f).pow(i));
+    std::cout << "d: " << d << std::endl;
+    
+    p.toString();
+    
+    Numeric<float> floatNum(4.3f);
+    Numeric<int> intNum(2);
+    Numeric<int> intNum2(6);
+    intNum = 2 + (intNum2 - 4) + static_cast<double>(floatNum) / 2.3;
+    std::cout << "intNum: " << intNum << std::endl;
+    
     {
-        *heapFloat += 2.f;
-        return ft;
-    });
-
-    std::cout << "Float Type + 2 using Lambda: " << ft << std::endl;
-    std::cout << "Float Type x 3 using Function Pointer: " << ft.apply(triple<float>) << "\n" << std::endl;   
-    std::cout << "Double Type Initial Valule: " << dt << std::endl;
-
-    dt.apply( [&dt](std::unique_ptr<DoubleType::Type>& heapDub) -> DoubleType&
+        using Type = decltype(f)::Type;
+        f.apply([&f](std::unique_ptr<Type>&value) -> decltype(f)&
+                {
+                    auto& v = *value;
+                    v = v * v;
+                    return f;
+                });
+        std::cout << "f squared: " << f << std::endl;
+        
+        f.apply( cube<Type> );
+        std::cout << "f cubed: " << f << std::endl;
+    }
+    
     {
-        *heapDub += 2.0;
-        return dt;
-    });
-
-    std::cout << "Double Type + 2 using Lambda: " << dt << std::endl;
-    std::cout << "Double Type x 3 using Function Pointer: " << dt.apply(triple<double>) << "\n" << std::endl;
-    std::cout << "Int Type Initial Valule: " << it << std::endl;
-
-    it.apply( [&it](std::unique_ptr<IntType::Type>& heapInt) -> IntType&
+        using Type = decltype(d)::Type;
+        d.apply([&d](std::unique_ptr<Type>&value) -> decltype(d)&
+                {
+                    auto& v = *value;
+                    v = v * v;
+                    return d;
+                });
+        std::cout << "d squared: " << d << std::endl;
+        
+        d.apply( cube<Type> );
+        std::cout << "d cubed: " << d << std::endl;
+    }
+    
     {
-        *heapInt += 2;
-        return it;
-    });
-
-    std::cout << "Int Type + 2 using Lambda: " << it << std::endl;
-    std::cout << "Int Type x 3 using Function Pointer: " << it.apply(triple<int>) << "\n" << std::endl;
-
-    std::cout << std::endl;
-    std::cout << "Additional tests on divide by 0." << std::endl;
-
-    ft/=0;
-    std::cout << "ft: " << ft << std::endl;
-    it/=0; 
-    std::cout << "it: " << it << std::endl;
-
-    std::cout << "good to go!" << std::endl;
-
-    //dt.pow(dt);
-
+        using Type = decltype(i)::Type;
+        i.apply([&i](std::unique_ptr<Type>&value) -> decltype(i)&
+                {
+                    auto& v = *value;
+                    v = v * v;
+                    return i;
+                });
+        std::cout << "i squared: " << i << std::endl;
+        
+        i.apply( cube<Type> );
+        std::cout << "i cubed: " << i << std::endl;
+    }
 }
