@@ -253,7 +253,7 @@ struct Numeric
 {
     using Type = T;
 
-    Numeric( Type n ) : heapNumber( new Type(n) ) {}
+    Numeric( Temporary<Type> n ) : heapNumber( new Temporary<Type>(n) ) {}
     Numeric() : Numeric(0) {}
 
     ~Numeric()
@@ -262,37 +262,38 @@ struct Numeric
     }
 
     operator Type() const { return *heapNumber; }
+    operator Type&() { return *heapNumber; }
 
     template<typename OtherType>
-    Numeric& operator=( const OtherType y )
+    Numeric& operator=( const OtherType& y )
     {
         *heapNumber = static_cast<Type>(y);
         return *this;
     }
 
     template<typename OtherType>
-    Numeric& operator+=( const OtherType y )
+    Numeric& operator+=( const OtherType& y )
     {
         *heapNumber += static_cast<Type>(y);
         return *this;
     }
 
     template<typename OtherType>
-    Numeric& operator-=( const OtherType y )
+    Numeric& operator-=( const OtherType& y )
     {
         *heapNumber -= static_cast<Type>(y);
         return *this;
     }
 
     template<typename OtherType>
-    Numeric& operator*=( const OtherType y )
+    Numeric& operator*=( const OtherType& y )
     {
         *heapNumber *= static_cast<Type>(y);
         return *this;
     }
   
     template<typename OtherType>
-    Numeric& operator/=( const OtherType y )
+    Numeric& operator/=( const OtherType& y )
     {
         if constexpr ( std::is_same<Type, int>::value )
         {
@@ -321,7 +322,7 @@ struct Numeric
     }
 
     template<typename OtherType>
-    Numeric& pow( const OtherType y )
+    Numeric& pow( const OtherType& y )
     {
         if( heapNumber != nullptr )
         {
@@ -338,7 +339,7 @@ struct Numeric
     }
 
 private:
-    std::unique_ptr<Type> heapNumber{ new Type() };
+    std::unique_ptr<Temporary<Type>> heapNumber{ new Type() };
 
 };
 
