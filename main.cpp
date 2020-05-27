@@ -253,7 +253,7 @@ struct Numeric
 {
     using Type = T;
 
-    Numeric( Temporary<Type> n ) : heapNumber( new Temporary<Type>(n) ) {}
+    Numeric( Temporary<T> n ) : heapNumber( new Temporary<T>(n) ) {}
     Numeric() : Numeric(0) {}
 
     ~Numeric()
@@ -339,7 +339,7 @@ struct Numeric
     }
 
 private:
-    std::unique_ptr<Temporary<Type>> heapNumber{ new Type() };
+    std::unique_ptr<Temporary<T>> heapNumber{ new Type() };
 
 };
 
@@ -397,7 +397,7 @@ int main()
     
     {
         using Type = decltype(f)::Type;
-        f.apply([&f](std::unique_ptr<Type>&value) -> decltype(f)&
+        f.apply([&f](std::unique_ptr<Temporary<Type>>&value) -> decltype(f)&
                 {
                     auto& v = *value;
                     v = v * v;
@@ -405,13 +405,13 @@ int main()
                 });
         std::cout << "f squared: " << f << std::endl;
         
-        f.apply( cube<Type> );
+        f.apply( cube<Temporary<Type>> );
         std::cout << "f cubed: " << f << std::endl;
     }
     
     {
         using Type = decltype(d)::Type;
-        d.apply([&d](std::unique_ptr<Type>&value) -> decltype(d)&
+        d.apply([&d](std::unique_ptr<Temporary<Type>>&value) -> decltype(d)&
                 {
                     auto& v = *value;
                     v = v * v;
@@ -419,13 +419,13 @@ int main()
                 });
         std::cout << "d squared: " << d << std::endl;
         
-        d.apply( cube<Type> );
+        d.apply( cube<Temporary<Type>> );
         std::cout << "d cubed: " << d << std::endl;
     }
     
     {
         using Type = decltype(i)::Type;
-        i.apply([&i](std::unique_ptr<Type>&value) -> decltype(i)&
+        i.apply([&i](std::unique_ptr<Temporary<Type>>&value) -> decltype(i)&
                 {
                     auto& v = *value;
                     v = v * v;
@@ -433,7 +433,7 @@ int main()
                 });
         std::cout << "i squared: " << i << std::endl;
         
-        i.apply( cube<Type> );
+        i.apply( cube<Temporary<Type>> );
         std::cout << "i cubed: " << i << std::endl;
     }
 }
