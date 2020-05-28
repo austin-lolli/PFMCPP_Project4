@@ -240,7 +240,7 @@ struct Point
 
     void toString()
     {
-        std::cout << "( " << x << ", " << y << " )" << std::endl;
+        std::cout << "Point { x: " << x << ", y: " << y << " }" << std::endl;
     }
 
 private:
@@ -251,9 +251,9 @@ private:
 template<typename T>
 struct Numeric
 {
-    using Type = T;
+    using Type = Temporary<T>;
 
-    Numeric( Temporary<T> n ) : heapNumber( new Temporary<T>(n) ) {}
+    Numeric( Type n ) : heapNumber( new Type(n) ) {}
     Numeric() : Numeric(0) {}
 
     ~Numeric()
@@ -261,41 +261,41 @@ struct Numeric
         heapNumber = nullptr;
     }
 
-    operator Type() const { return *heapNumber; }
-    operator Type&() { return *heapNumber; }
+    operator T() const { return *heapNumber; }
+    operator T&() { return *heapNumber; }
 
     template<typename OtherType>
     Numeric& operator=( const OtherType& y )
     {
-        *heapNumber = static_cast<Type>(y);
+        *heapNumber = static_cast<T>(y);
         return *this;
     }
 
     template<typename OtherType>
     Numeric& operator+=( const OtherType& y )
     {
-        *heapNumber += static_cast<Type>(y);
+        *heapNumber += static_cast<T>(y);
         return *this;
     }
 
     template<typename OtherType>
     Numeric& operator-=( const OtherType& y )
     {
-        *heapNumber -= static_cast<Type>(y);
+        *heapNumber -= static_cast<T>(y);
         return *this;
     }
 
     template<typename OtherType>
     Numeric& operator*=( const OtherType& y )
     {
-        *heapNumber *= static_cast<Type>(y);
+        *heapNumber *= static_cast<T>(y);
         return *this;
     }
   
     template<typename OtherType>
     Numeric& operator/=( const OtherType& y )
     {
-        if constexpr ( std::is_same<Type, int>::value )
+        if constexpr ( std::is_same<T, int>::value )
         {
             if constexpr ( std::is_same<decltype(y), const int>::value )
             {
@@ -305,19 +305,19 @@ struct Numeric
                     return *this; 
                 }
             }
-            else if ( y < std::numeric_limits<Type>::epsilon() )
+            else if ( y < std::numeric_limits<T>::epsilon() )
             {
                 std::cout << "Can't divide by non-int 0! Cancelling operation." << std::endl;
                 return *this;
             }
                 
         }
-        else if ( y < std::numeric_limits<Type>::epsilon() )
+        else if ( y < std::numeric_limits<T>::epsilon() )
         {
             std::cout << "Warning! Dividing by 0." << std::endl;
         }
             
-        *heapNumber /= static_cast<Type>(y);
+        *heapNumber /= static_cast<T>(y);
         return *this;
     }
 
@@ -326,7 +326,7 @@ struct Numeric
     {
         if( heapNumber != nullptr )
         {
-            *heapNumber = static_cast<Type>( std::pow( *heapNumber, static_cast<const Type>(y) ) );
+            *heapNumber = static_cast<Type>( std::pow( *heapNumber, static_cast<const T>(y) ) );
         }
         return *this;
     }
@@ -339,7 +339,7 @@ struct Numeric
     }
 
 private:
-    std::unique_ptr<Temporary<T>> heapNumber{ new Type() };
+    std::unique_ptr<Type> heapNumber{ new Type() };
 
 };
 
@@ -397,7 +397,7 @@ int main()
     
     {
         using Type = decltype(f)::Type;
-        f.apply([&f](std::unique_ptr<Temporary<Type>>&value) -> decltype(f)&
+        f.apply([&f](std::unique_ptr<Type>&value) -> decltype(f)&
                 {
                     auto& v = *value;
                     v = v * v;
@@ -405,13 +405,13 @@ int main()
                 });
         std::cout << "f squared: " << f << std::endl;
         
-        f.apply( cube<Temporary<Type>> );
+        f.apply( cube<Type> );
         std::cout << "f cubed: " << f << std::endl;
     }
     
     {
         using Type = decltype(d)::Type;
-        d.apply([&d](std::unique_ptr<Temporary<Type>>&value) -> decltype(d)&
+        d.apply([&d](std::unique_ptr<Type>&value) -> decltype(d)&
                 {
                     auto& v = *value;
                     v = v * v;
@@ -419,13 +419,13 @@ int main()
                 });
         std::cout << "d squared: " << d << std::endl;
         
-        d.apply( cube<Temporary<Type>> );
+        d.apply( cube<Type> );
         std::cout << "d cubed: " << d << std::endl;
     }
     
     {
         using Type = decltype(i)::Type;
-        i.apply([&i](std::unique_ptr<Temporary<Type>>&value) -> decltype(i)&
+        i.apply([&i](std::unique_ptr<Type>&value) -> decltype(i)&
                 {
                     auto& v = *value;
                     v = v * v;
@@ -433,7 +433,7 @@ int main()
                 });
         std::cout << "i squared: " << i << std::endl;
         
-        i.apply( cube<Temporary<Type>> );
+        i.apply( cube<Type> );
         std::cout << "i cubed: " << i << std::endl;
     }
 }
