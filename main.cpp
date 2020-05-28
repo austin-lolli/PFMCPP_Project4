@@ -353,7 +353,8 @@ void triple(std::unique_ptr<T> &heapNumber)
 template<typename T>
 void cube(std::unique_ptr<T> &heapNumber)
 {
-    *heapNumber *= ( (*heapNumber) * (*heapNumber) );
+    // previously *heapNumber *= ( (*heapNumber) * (*heapNumber) ) but this doesnt create a temporary for assignment 
+    *heapNumber = ( (*heapNumber) * (*heapNumber) * (*heapNumber) );
 }
 
 
