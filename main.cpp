@@ -354,7 +354,7 @@ void cube(std::unique_ptr<T> &heapNumber)
 {
     // previously *heapNumber *= ( (*heapNumber) * (*heapNumber) ) but this doesnt create a temporary for assignment 
     auto& v = *heapNumber;
-    *heapNumber = v * v * v;
+    v = v * v * v;
 }
 
 
