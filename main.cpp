@@ -304,14 +304,14 @@ struct Numeric
                     return *this; 
                 }
             }
-            else if ( y < std::numeric_limits<T>::epsilon() )
+            else if ( y < std::numeric_limits<OtherType>::epsilon() )
             {
                 std::cout << "Can't divide by non-int 0! Cancelling operation." << std::endl;
                 return *this;
             }
                 
         }
-        else if ( y < std::numeric_limits<T>::epsilon() )
+        else if ( y < std::numeric_limits<OtherType>::epsilon() )
         {
             std::cout << "Warning! Dividing by 0." << std::endl;
         }
@@ -353,7 +353,8 @@ template<typename T>
 void cube(std::unique_ptr<T> &heapNumber)
 {
     // previously *heapNumber *= ( (*heapNumber) * (*heapNumber) ) but this doesnt create a temporary for assignment 
-    *heapNumber = ( (*heapNumber) * (*heapNumber) * (*heapNumber) );
+    auto& v = *heapNumber;
+    *heapNumber = v * v * v;
 }
 
 
