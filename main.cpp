@@ -84,48 +84,14 @@ struct Temporary
         std::cout << "I'm a Temporary<" << typeid(v).name() << "> object, #"
                   << counter++ << std::endl;
     }
-
-    ~Temporary()
-    {
-        delete v;
-    }
-
-    Temporary( const NumericType& other)
-    {
-        delete v;
-        v = other.v;
-    }
-
-    Temporary& operator=( const NumericType& other)
-    {
-        delete v;
-        v = other.v;
-        return *this;
-    }
-
-    Temporary( NumericType&& otherToStealFrom )
-    {
-        delete v;
-        v = otherToStealFrom.v;
-        otherToStealFrom.v = nullptr;
-    }
-
-    Temporary& operator=( NumericType&& otherToStealFrom )
-    {
-        delete v;
-        v = otherToStealFrom.v;
-        otherToStealFrom.v = nullptr;
-        return *this;
-    }
     
     operator NumericType() const { /* read-only function */ return v; }
     operator NumericType&() { /* read/write function */ return v; }
-
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Temporary)
     
 private:
     static int counter;
     NumericType v;
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Temporary)
 };
 
 
@@ -176,28 +142,6 @@ struct Numeric
     {
         heapNumber = nullptr;
     }
-
-    Numeric( const Type& other )
-    {
-        heapNumber = nullptr;
-        heapNumber = other.heapNumber;
-    }
-
-    Numeric( Type&& otherToStealFrom )
-    {
-        heapNumber = nullptr;
-        heapNumber = otherToStealFrom.heapNumber;
-        otherToStealFrom.heapNumber = nullptr;
-    }
-
-    Numeric& operator=( Type&& otherToStealFrom )
-    {
-        heapNumber = nullptr;
-        heapNumber = otherToStealFrom.heapNumber;
-        otherToStealFrom.heapNumber = nullptr;
-        return *this;
-    }
-
 
     operator T() const { return *heapNumber; }
     operator T&() { return *heapNumber; }
@@ -276,11 +220,9 @@ struct Numeric
         return *this;
     }
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Numeric)
-
 private:
     std::unique_ptr<Type> heapNumber{ new Type() };
-
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Numeric)
 };
 
 // free functions to pass to apply
