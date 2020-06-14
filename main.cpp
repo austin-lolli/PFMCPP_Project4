@@ -84,6 +84,39 @@ struct Temporary
         std::cout << "I'm a Temporary<" << typeid(v).name() << "> object, #"
                   << counter++ << std::endl;
     }
+
+    ~Temporary()
+    {
+        delete v;
+    }
+
+    Temporary( const NumericType& other)
+    {
+        delete v;
+        v = other.v;
+    }
+
+    Temporary& operator=( const NumericType& other)
+    {
+        delete v;
+        v = other.v;
+        return *this;
+    }
+
+    Temporary( NumericType&& otherToStealFrom )
+    {
+        delete v;
+        v = otherToStealFrom.v;
+        otherToStealFrom.v = nullptr;
+    }
+
+    Temporary& operator=( NumericType&& otherToStealFrom )
+    {
+        delete v;
+        v = otherToStealFrom.v;
+        otherToStealFrom.v = nullptr;
+        return *this;
+    }
     
     operator NumericType() const { /* read-only function */ return v; }
     operator NumericType&() { /* read/write function */ return v; }
@@ -143,6 +176,35 @@ struct Numeric
     {
         heapNumber = nullptr;
     }
+
+    Numeric( const Type& other )
+    {
+        heapNumber = nullptr;
+        heapNumber = other.heapNumber;
+    }
+
+    Numeric& operator=( const Type& other )
+    {
+        heapNumber = nullptr;
+        heapNumber = other.heapNumber;
+        return *this;
+    }
+
+    Numeric( Type&& otherToStealFrom )
+    {
+        heapNumber = nullptr;
+        heapNumber = otherToStealFrom.heapNumber;
+        otherToStealFrom.heapNumber = nullptr;
+    }
+
+    Numeric& operator=( Type&& otherToStealFrom )
+    {
+        heapNumber = nullptr;
+        heapNumber = otherToStealFrom.heapNumber;
+        otherToStealFrom.heapNumber = nullptr;
+        return *this;
+    }
+
 
     operator T() const { return *heapNumber; }
     operator T&() { return *heapNumber; }
