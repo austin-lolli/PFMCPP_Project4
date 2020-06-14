@@ -84,6 +84,16 @@ struct Temporary
         std::cout << "I'm a Temporary<" << typeid(v).name() << "> object, #"
                   << counter++ << std::endl;
     }
+
+    ~Temporary() = default;
+
+    Temporary( Temporary&& otherToTakeFrom ) : v(std::move(otherToTakeFrom.v)){ }
+
+    Temporary& operator=( Temporary&& otherToTakeFrom )
+    {
+        v = std::move(otherToTakeFrom.v);
+        return *this;
+    }
     
     operator NumericType() const { /* read-only function */ return v; }
     operator NumericType&() { /* read/write function */ return v; }
@@ -141,6 +151,15 @@ struct Numeric
     ~Numeric()
     {
         heapNumber = nullptr;
+    }
+
+    Numeric( Numeric&& otherToTakeFrom ) : heapNumber (std::move(otherToTakeFrom.heapNumber){ }
+
+    Numeric& operator=( Numeric&& otherToTakeFrom )
+    {
+        heapNumber = nullptr;
+        heapNumber = std::move(otherToTakeFrom.heapNumber);
+        return *this;
     }
 
     operator T() const { return *heapNumber; }
