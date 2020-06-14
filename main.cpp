@@ -183,13 +183,6 @@ struct Numeric
         heapNumber = other.heapNumber;
     }
 
-    Numeric& operator=( const Type& other )
-    {
-        heapNumber = nullptr;
-        heapNumber = other.heapNumber;
-        return *this;
-    }
-
     Numeric( Type&& otherToStealFrom )
     {
         heapNumber = nullptr;
