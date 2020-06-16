@@ -79,7 +79,7 @@ Use a service like https://www.diffchecker.com/diff to compare your output.
 template<typename NumericType>
 struct Temporary
 {
-    explicit Temporary(NumericType t) : v(t)
+    Temporary(NumericType t) : v(t)
     {
         std::cout << "I'm a Temporary<" << typeid(v).name() << "> object, #"
                   << counter++ << std::endl;
@@ -145,19 +145,15 @@ struct Numeric
 {
     using Type = Temporary<T>;
 
-    Numeric( Type n ) : heapNumber( new Type(n) ) {}
+    Numeric( T n ) : heapNumber( std::make_unique<Type>(n) ) {}
     Numeric() : Numeric(0) {}
 
-    ~Numeric()
-    {
-        heapNumber = nullptr;
-    }
+    ~Numeric() = default;
 
-    Numeric( Numeric&& otherToTakeFrom ) : heapNumber (std::move(otherToTakeFrom.heapNumber){ }
+    Numeric( Numeric&& otherToTakeFrom ) : heapNumber(std::move(otherToTakeFrom.heapNumber)){ }
 
     Numeric& operator=( Numeric&& otherToTakeFrom )
     {
-        heapNumber = nullptr;
         heapNumber = std::move(otherToTakeFrom.heapNumber);
         return *this;
     }
