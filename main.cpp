@@ -236,7 +236,7 @@ struct Numeric
     }
 
 private:
-    std::unique_ptr<Type> heapNumber{ new Type() };
+    std::unique_ptr<Type> heapNumber;
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Numeric)
 };
 
