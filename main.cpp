@@ -11,7 +11,7 @@ Create a branch named Part9
  1) add the Leak Detector files from Project5
  
  2) add these macros after the JUCE_LEAK_DETECTOR macro :
- */
+
 
 #define JUCE_DECLARE_NON_COPYABLE(className) \
             className (const className&) = delete;\
@@ -20,7 +20,7 @@ Create a branch named Part9
 #define JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(className) \
             JUCE_DECLARE_NON_COPYABLE(className) \
             JUCE_LEAK_DETECTOR(className)
-
+ */
 /*
  3) add JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Temporary) to the end of the  Temporary<> struct
  
@@ -74,21 +74,34 @@ Use a service like https://www.diffchecker.com/diff to compare your output.
 #include <functional>
 #include <memory>
 #include <typeinfo>
+#include "LeakedObjectDetector.h"
 
 template<typename NumericType>
 struct Temporary
 {
-    explicit Temporary(NumericType t) : v(t)
+    Temporary(NumericType t) : v(t)
     {
         std::cout << "I'm a Temporary<" << typeid(v).name() << "> object, #"
                   << counter++ << std::endl;
     }
+
+    ~Temporary() = default;
+
+    Temporary( Temporary&& otherToTakeFrom ) : v(std::move(otherToTakeFrom.v)){ }
+
+    Temporary& operator=( Temporary&& otherToTakeFrom )
+    {
+        v = std::move(otherToTakeFrom.v);
+        return *this;
+    }
     
     operator NumericType() const { /* read-only function */ return v; }
     operator NumericType&() { /* read/write function */ return v; }
+    
 private:
     static int counter;
     NumericType v;
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Temporary)
 };
 
 
@@ -132,12 +145,17 @@ struct Numeric
 {
     using Type = Temporary<T>;
 
-    Numeric( Type n ) : heapNumber( new Type(n) ) {}
+    Numeric( T n ) : heapNumber( std::make_unique<Type>(n) ) {}
     Numeric() : Numeric(0) {}
 
-    ~Numeric()
+    ~Numeric() = default;
+
+    Numeric( Numeric&& otherToTakeFrom ) : heapNumber(std::move(otherToTakeFrom.heapNumber)){ }
+
+    Numeric& operator=( Numeric&& otherToTakeFrom )
     {
-        heapNumber = nullptr;
+        heapNumber = std::move(otherToTakeFrom.heapNumber);
+        return *this;
     }
 
     operator T() const { return *heapNumber; }
@@ -218,8 +236,8 @@ struct Numeric
     }
 
 private:
-    std::unique_ptr<Type> heapNumber{ new Type() };
-
+    std::unique_ptr<Type> heapNumber;
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Numeric)
 };
 
 // free functions to pass to apply
